@@ -1,0 +1,36 @@
+﻿<Window x:Class="WpfApp1.Waiter.AddOrder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1.Waiter"
+        mc:Ignorable="d"
+        Title="AddOrder" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel>
+                <Label Content="Заказ" FontSize="20" FontWeight="Bold"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" HorizontalScrollBarVisibility="Auto" Width="440">
+                    <WrapPanel Width="440" Height="auto" x:Name="orderDishesBoard">
+                        
+                    </WrapPanel>
+                </ScrollViewer>
+            </StackPanel>
+            
+            <StackPanel Orientation="Vertical" Margin="15 0 0 0" Background="LightGray">
+                <Label Content="Меню" FontSize="20" FontWeight="Bold"/>
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox x:Name="categoryComboBox" SelectionChanged="categoryComboBox_SelectionChanged" Width="150" HorizontalAlignment="Left"/>
+                    <Button Content="Оформить заказ" Width="auto" Padding="15 5" Background="#2C3E50" Foreground="White" Margin="40 0" Click="Button_Click"/>
+                </StackPanel>
+               
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" HorizontalScrollBarVisibility="Auto" >
+                    <WrapPanel x:Name="dishes" Width="350" Height="auto">
+                    </WrapPanel>
+                </ScrollViewer>
+            </StackPanel>
+            
+        </StackPanel>
+    </Grid>
+</Window>
