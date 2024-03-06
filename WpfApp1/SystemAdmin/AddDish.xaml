@@ -17,7 +17,7 @@ WindowStartupLocation="CenterScreen">
 
             <TextBlock Text="Категория блюда:"/>
             <StackPanel Orientation="Horizontal">
-                <ComboBox x:Name="typeComboBox" Width="120" HorizontalAlignment="Left" Margin="0 0 0 0"/>
+                <ComboBox x:Name="typeComboBox" Width="218" HorizontalAlignment="Left" Margin="0 0 0 0"/>
                 <Button Margin="5 0" Content="+" Width="20" Height="20" Background="Black" Foreground="White" FontWeight="Bold" Click="Button_Click"/>
             </StackPanel>
 

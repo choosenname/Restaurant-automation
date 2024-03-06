@@ -35,13 +35,13 @@
             <Button Content="Сотрудники" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="All_Employee_Click" Background="#2C3E50" Foreground="White"/>
             <Button Content="Добавить сотрудника" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="Add_Employee_Click" Background="#2C3E50" Foreground="White"/>
             <Button Content="Удалить сотрудника" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="Delete_Employee_Click" Background="#2C3E50" Foreground="White"/>
-            <Button Name="ExportButton" Content="Экспорт в Word" Click="ExportButton_Click"/>
+            <Button Name="ExportButton" Content="Экспорт в Word" Click="ExportButton_Click" Background="#2C3E50" Foreground="White"  Width="150" Height="30" Margin="0,5,0,0"/>
         </StackPanel>
 
         <!-- Вторая колонка -->
-        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20">
-            <Button Content="Меню" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="All_Dish_Click" Background="#2C3E50" Foreground="White"/>
-            <Button Content="Добавить блюдо" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="Add_Dish_Click" Background="#2C3E50" Foreground="White"/>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,20,0" Height="113">
+            <Button Content="Добавить блюдо" Width="150" Height="30" Click="Add_Dish_Click" Background="#2C3E50" Foreground="White"/>
+            <Button Content="Меню" Width="150" Height="30" Click="All_Dish_Click"  Margin="0,5,0,0" Background="#2C3E50" Foreground="White"/>
             <Button Content="Удалить блюдо" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="Delete_Dish_Click" Background="#2C3E50" Foreground="White"/>
         </StackPanel>
 

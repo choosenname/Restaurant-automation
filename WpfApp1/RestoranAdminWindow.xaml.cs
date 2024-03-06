@@ -127,6 +127,7 @@ namespace WpfApp1
                 Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(44, 62, 80)),
                 Foreground = Brushes.White
             };
+            string reportFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CancellationReport" + DateTime.Now.ToString("(yyyy.MM.dd.HH.mm.ss)") + ".docx");
 
 
             btnCard.Click += (sender, e) =>
@@ -139,9 +140,10 @@ namespace WpfApp1
                 textBox1.Height = 160;
                 submitButton.Content = "Создать отчет";
                 submitButton.Margin = new Thickness(10);
-                string reportFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CancellationReport" + DateTime.Now.ToString("(yyyy.MM.dd.HH.mm.ss)") + ".docx");
                 submitButton.Click += (sender, e) =>
                 {
+                    MessageBox.Show($"Отчет успешно создан и сохранен по следующему пути:\n{reportFilePath}", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
+
                     string reason = textBox1.Text;
 
                     CancellationReport report = new CancellationReport
@@ -179,7 +181,6 @@ namespace WpfApp1
                 window.Content = stackPanel;
                 window.ShowDialog();
                 UiAllOrder();
-                MessageBox.Show($"Отчет успешно создан и сохранен по следующему пути:\n{reportFilePath}", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
             };
 
             stackPanel.Children.Add(seatLabel);
@@ -191,6 +192,7 @@ namespace WpfApp1
             customBorder.Child = stackPanel;
 
             orderBoard.Children.Add(customBorder);
+
 
         }
         private void GenerateCancellationReport(string reason, string filePath)

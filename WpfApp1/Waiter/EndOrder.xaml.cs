@@ -24,6 +24,7 @@ namespace WpfApp1.Waiter
     /// </summary>
     public partial class EndOrder : Window
     {
+        private List<DishInOrder> orderItems;
         DatabaseContext db = new DatabaseContext();
         private int discount = 0;
         Order Order { get; set; }
@@ -34,6 +35,8 @@ namespace WpfApp1.Waiter
             Window window = new Window { Height = 150, Width = 100, WindowStartupLocation = WindowStartupLocation.CenterScreen };
             TextBox textBox1 = new TextBox();
             Button submitButton = new Button();
+            orderItems = db.DishInOrders.Include(x => x.Dish).Include(x => x.Order).Where(x => x.Order.Id == order.Id).ToList();
+
 
             textBox1.Margin = new Thickness(10);
             textBox1.Text = "0";
@@ -60,6 +63,7 @@ namespace WpfApp1.Waiter
 
         private void GetCheck(Order order)
         {
+            Console.WriteLine("Count of items in orderItems: " + orderItems.Count); // Добавляем эту строку
             string example = $"================================\nРесторан\n\nДата и время: {order.Date.ToString("dd.MM.yyyy HH:mm")} PM\n--------------------------------\nБлюда:\n";
             int count = 0;
             decimal result = 0;
@@ -74,9 +78,10 @@ namespace WpfApp1.Waiter
             all = allResult;
             order.Result = all;
             example += $"--------------------------------\nЦена без скидки:             {result}\nСкидка:             {discount}%\nСкидка в денежном эквиваленте:          {discontResult}\nИтог со скидкой:             {allResult}\n\nСпасибо!\n================================";
-            textBox.Text = example ;
+            textBox.Text = example;
             db.SaveChanges();
         }
+
 
         private void End_Click(object sender, RoutedEventArgs e)
         {
@@ -92,10 +97,60 @@ namespace WpfApp1.Waiter
 
         }
 
+
+        private void SplitCheck_Click(object sender, RoutedEventArgs e)
+        {
+            SplitCheckWindow splitCheckWindow = new SplitCheckWindow(orderItems);
+            splitCheckWindow.ShowDialog();
+
+            // Получаем выбранные блюда для каждого чека
+            var firstPartItems = splitCheckWindow.FirstPartItems;
+            var secondPartItems = splitCheckWindow.SecondPartItems;
+
+            // Формируем текст для первого чека
+            string firstPartExample = GetCheckText(firstPartItems);
+
+            // Формируем текст для второго чека
+            string secondPartExample = GetCheckText(secondPartItems);
+
+            // Отображаем чеки в TextBox
+            textBox.Text = firstPartExample + secondPartExample;
+        }
+
+        private string GetCheckText(List<DishInOrder> items)
+        {
+            if (items == null || items.Count == 0)
+            {
+                return "Список блюд пуст.";
+            }
+
+            string example = "";
+            decimal result = 0;
+            foreach (DishInOrder item in items)
+            {
+                if (item != null && item.Dish != null)
+                {
+                    example += $"{item.Dish.Name}         {item.Dish.Price} * {item.DishCount}\n";
+                    result += item.Dish.Price * item.DishCount;
+                }
+            }
+            decimal discontResult = result * Convert.ToDecimal(discount / 100.0);
+            decimal allResult = result - discontResult;
+            all = allResult;
+            // Дополните чек другими данными, если это необходимо
+            example += $"--------------------------------\nЦена без скидки:             {result}\nСкидка:             {discount}%\nСкидка в денежном эквиваленте:          {discontResult}\nИтог со скидкой:             {allResult}\n\nСпасибо!\n================================";
+            return example;
+        }
+
+
+
+
+
+
         private void Print_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
-            wordApp.Visible = true; 
+            wordApp.Visible = true;
             Document doc = wordApp.Documents.Add();
             doc.Content.Text = textBox.Text;
 

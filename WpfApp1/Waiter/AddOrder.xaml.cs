@@ -55,7 +55,7 @@ namespace WpfApp1.Waiter
                 count = guestsCount;
 
                 window.Close();
-                InitializeComponent();
+                InitializeComponent();  
                 categoryComboBox.ItemsSource = db.DishCategories.ToList();
                 categoryComboBox.SelectedIndex = 0;
             };
@@ -117,7 +117,6 @@ namespace WpfApp1.Waiter
                 Foreground = Brushes.White,
                 VerticalAlignment = VerticalAlignment.Bottom
             };
-
             addButton.Click += (sender, e) =>
             {
                 OrderDishModel model = orderDishes.FirstOrDefault(x => x.Dish.Id == dish.Id);
@@ -263,12 +262,18 @@ namespace WpfApp1.Waiter
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (orderDishes.Count == 0)
+            {
+                MessageBox.Show("Нельзя оформить пустой заказ!");
+                return;
+            }
+
             Order order = new Order();
             order.Date = DateTime.Now;
             order.NumberSeat = numberSeat;
             order.Count = count;
 
-            db.Orders.Add(order);   
+            db.Orders.Add(order);
 
             foreach (OrderDishModel item in orderDishes)
             {
@@ -276,9 +281,12 @@ namespace WpfApp1.Waiter
             }
 
             db.SaveChanges();
+
             MessageBox.Show("Заказ успешно добавлен");
+
             this.Close();
         }
+
     }
 
     internal class OrderDishModel

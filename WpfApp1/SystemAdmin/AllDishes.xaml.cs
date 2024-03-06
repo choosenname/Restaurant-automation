@@ -2,6 +2,7 @@
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -28,20 +29,22 @@ namespace WpfApp1.SystemAdmin
     public partial class AllDishes : Window
     {
         DatabaseContext db = new DatabaseContext();
+        ICollectionView collectionView; 
+
         public AllDishes()
         {
             InitializeComponent();
-            dataGrid.ItemsSource = db.Dishes.Include(x => x.Category).ToList();
+
+            searchBox.TextChanged += SearchBox_TextChanged;
+
+            collectionView = CollectionViewSource.GetDefaultView(db.Dishes.Include(x => x.Category).ToList());
+            dataGrid.ItemsSource = collectionView;
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                IEnumerable<Dish> allDishes = dataGrid.ItemsSource as IEnumerable<Dish>;
-
-                if (allDishes == null) throw new Exception("Нет блюд");
-
                 db.SaveChanges();
 
                 MessageBox.Show("Данные обновлены");
@@ -50,7 +53,47 @@ namespace WpfApp1.SystemAdmin
             {
                 MessageBox.Show(ex.Message);
             }
-            
+        }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchText = searchBox.Text.Trim().ToLower();
+
+            if (collectionView != null)
+            {
+                if (string.IsNullOrEmpty(searchText))
+                {
+                    collectionView.Filter = null; 
+                }
+                else
+                {
+                    collectionView.Filter = item =>
+                    {
+                        var dish = item as Dish;
+                        return dish.Name.ToLower().Contains(searchText);
+                    };
+                }
+            }
+        }
+
+
+
+        private void searchBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (searchBox.Text == "Поиск по названию блюда")
+            {
+                searchBox.Text = "";
+                searchBox.Foreground = Brushes.Black;
+            }
+        }
+
+        private void searchBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(searchBox.Text))
+            {
+                searchBox.Text = "Поиск по названию блюда";
+                searchBox.Foreground = Brushes.Gray;
+            }
         }
     }
 }

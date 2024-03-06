@@ -12,10 +12,10 @@
             <TextBlock Text="Id:"/>
             <TextBlock x:Name="employeeId" Text="" FontWeight="Bold" Margin="0 5"/>
             <TextBlock Text="Имя:"/>
-            <TextBox x:Name="txtName" Margin="0 5"/>
+            <TextBox x:Name="txtName" Width="200" HorizontalAlignment="Left"/>
 
             <TextBlock Text="Тип пользователя:"/>
-            <ComboBox x:Name="typeComboBox" Width="120" HorizontalAlignment="Left" Margin="0 5 0 0"/>
+            <ComboBox x:Name="typeComboBox" Width="200" HorizontalAlignment="Left" Margin="0 5 0 0"/>
 
             <Button Content="Добавить" Width="100" Height="30" Margin="0,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Add_Click" Background="#2C3E50" Foreground="White"/>
 
