@@ -33,11 +33,29 @@ namespace WpfApp1
         private void UiAllOrder()
         {
             orderBoard.Children.Clear();
-            DatabaseContext tmp = new DatabaseContext();
-            foreach (Order item in tmp.Orders)
+            using (var db = new DatabaseContext())
             {
-                if(!item.IsEnd)
-                    UiOrder(item);
+                var orders = db.Orders.Where(o => o.is_cancel == false && o.IsEnd == false).ToList();
+                if (orders.Count == 0)
+                {
+                    Label noOrdersLabel = new Label
+                    {
+                        Content = "Нет ни одного заказа",
+                        FontWeight = FontWeights.Bold,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        FontSize = 16,
+                        Foreground = Brushes.DarkGray
+                    };
+                    orderBoard.Children.Add(noOrdersLabel);
+                }
+                else
+                {
+                    foreach (Order item in orders)
+                    {
+                        UiOrder(item);
+                    }
+                }
             }
         }
 
@@ -46,13 +64,20 @@ namespace WpfApp1
             Border customBorder = new Border
             {
                 Width = 100,
-                Height = 115,
+                Height = 141,
                 BorderBrush = Brushes.Black,
                 BorderThickness = new Thickness(1),
                 Margin = new Thickness(5)
             };
+            Label priceLabel = new Label
+            {
+                Content = $"Цена: {order.Result} руб.",
+                Width = 100,
+                Height = double.NaN
+            };
 
             StackPanel stackPanel = new StackPanel();
+
 
             Label seatLabel = new Label
             {
@@ -93,6 +118,7 @@ namespace WpfApp1
             stackPanel.Children.Add(seatLabel);
             stackPanel.Children.Add(dateLabel);
             stackPanel.Children.Add(timeLabel);
+            stackPanel.Children.Add(priceLabel);
             stackPanel.Children.Add(btnCard);
 
             customBorder.Child = stackPanel;

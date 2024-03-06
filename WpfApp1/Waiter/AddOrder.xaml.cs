@@ -28,7 +28,7 @@ namespace WpfApp1.Waiter
         List<OrderDishModel> orderDishes = new List<OrderDishModel>();
         public AddOrder()
         {
-            Window window = new Window { Height = 200, Width = 200, WindowStartupLocation = WindowStartupLocation.CenterScreen};
+            Window window = new Window { Height = 200, Width = 200, WindowStartupLocation = WindowStartupLocation.CenterScreen };
             TextBox textBox1 = new TextBox();
             TextBox textBox2 = new TextBox();
             Button submitButton = new Button();
@@ -39,9 +39,20 @@ namespace WpfApp1.Waiter
             submitButton.Margin = new Thickness(10);
             submitButton.Click += (sender, e) =>
             {
-                numberSeat = textBox1.Text;
-                count = Convert.ToInt32(textBox2.Text);
-                if (numberSeat == null || count == 0) throw new Exception("Заполните все данные");
+                if (!int.TryParse(textBox1.Text, out int tableNumber) || tableNumber < 0)
+                {
+                    MessageBox.Show("Пожалуйста, введите корректный номер стола (положительное целое число).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (!int.TryParse(textBox2.Text, out int guestsCount) || guestsCount <= 0)
+                {
+                    MessageBox.Show("Пожалуйста, введите корректное количество гостей (положительное целое число).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                numberSeat = tableNumber.ToString();
+                count = guestsCount;
 
                 window.Close();
                 InitializeComponent();
@@ -51,17 +62,16 @@ namespace WpfApp1.Waiter
 
             StackPanel stackPanel = new StackPanel();
             stackPanel.Orientation = Orientation.Vertical;
-            stackPanel.Children.Add(new Label { Content = "Номер стола:"});
+            stackPanel.Children.Add(new Label { Content = "Номер стола:" });
             stackPanel.Children.Add(textBox1);
             stackPanel.Children.Add(new Label { Content = "Количество гостей:" });
             stackPanel.Children.Add(textBox2);
             stackPanel.Children.Add(submitButton);
 
-
             window.Content = stackPanel;
             window.ShowDialog();
-
         }
+
 
         private void GetCategory(DishCategory category)
         {

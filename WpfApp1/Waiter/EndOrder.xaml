@@ -15,7 +15,11 @@
                 <RadioButton x:Name="radio2" Content="Карта" GroupName="Options"/>
             </StackPanel>
             <Button Content="Оплачено" Width="auto" Height="30" Margin="0,5,0,0" Padding="20 0" HorizontalAlignment="Center" VerticalAlignment="Top" Click="End_Click" Background="#2C3E50" Foreground="White"/>
-
+            <Button Content="Разделить чек" Click="SplitBill_Click"/>
+            <ComboBox x:Name="firstCheckComboBox" SelectionChanged="CheckComboBox_SelectionChanged"/>
+            <ComboBox x:Name="secondCheckComboBox" SelectionChanged="CheckComboBox_SelectionChanged"/>
+            <TextBlock x:Name="firstCheckTotal"/>
+            <TextBlock x:Name="secondCheckTotal"/>
         </StackPanel>
     </Grid>
 </Window>

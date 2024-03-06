@@ -19,9 +19,12 @@ namespace WpfApp1.Models
         public DbSet<DishCategory> DishCategories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<DishInOrder> DishInOrders { get; set; }
+        public DbSet<CancellationReport> CancellationReports { get; set; }
+
         public DbSet<Kassa> Kassa { get; set; }
         public DatabaseContext()
         {
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
@@ -30,6 +33,7 @@ namespace WpfApp1.Models
             var builder = new SqlConnectionStringBuilder(connectionString);
             optionsBuilder.UseSqlServer(builder.ConnectionString);
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
