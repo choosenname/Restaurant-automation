@@ -278,6 +278,7 @@ namespace WpfApp1.Waiter
             foreach (OrderDishModel item in orderDishes)
             {
                 db.DishInOrders.Add(new DishInOrder { Dish = item.Dish, DishCount = item.Count, Order = order });
+                order.Result += item.Dish.Price * item.Count;
             }
 
             db.SaveChanges();
