@@ -2,6 +2,7 @@
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,19 +25,32 @@ namespace WpfApp1.Waiter
     /// </summary>
     public partial class EndOrder : Window
     {
+        private string _selectedOption;
         private List<DishInOrder> orderItems;
         DatabaseContext db = new DatabaseContext();
         private int discount = 0;
         Order Order { get; set; }
         decimal all = 0;
+
+        public string SelectedOption
+        {
+            get { return _selectedOption; }
+            set
+            {
+                _selectedOption = value;
+                OnPropertyChanged("SelectedOption");
+                GetCheck(Order);
+            }
+        }
+
         public EndOrder(Order order)
         {
+            _selectedOption = "Наличные";
             Order = order;
             Window window = new Window { Height = 150, Width = 100, WindowStartupLocation = WindowStartupLocation.CenterScreen };
             TextBox textBox1 = new TextBox();
             Button submitButton = new Button();
             orderItems = db.DishInOrders.Include(x => x.Dish).Include(x => x.Order).Where(x => x.Order.Id == order.Id).ToList();
-
 
             textBox1.Margin = new Thickness(10);
             textBox1.Text = "0";
@@ -48,6 +62,7 @@ namespace WpfApp1.Waiter
                 window.Close();
                 InitializeComponent();
                 GetCheck(order);
+                SplitBtn.Visibility = order.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
             };
 
             StackPanel stackPanel = new StackPanel();
@@ -56,14 +71,12 @@ namespace WpfApp1.Waiter
             stackPanel.Children.Add(textBox1);
             stackPanel.Children.Add(submitButton);
 
-
             window.Content = stackPanel;
             window.ShowDialog();
         }
 
         private void GetCheck(Order order)
         {
-            Console.WriteLine("Count of items in orderItems: " + orderItems.Count); // Добавляем эту строку
             string example = $"================================\nРесторан\n\nДата и время: {order.Date.ToString("dd.MM.yyyy HH:mm")} PM\n--------------------------------\nБлюда:\n";
             int count = 0;
             decimal result = 0;
@@ -77,7 +90,7 @@ namespace WpfApp1.Waiter
             decimal allResult = result - discontResult;
             all = allResult;
             order.Result = all;
-            example += $"--------------------------------\nЦена без скидки:             {result}\nСкидка:             {discount}%\nСкидка в денежном эквиваленте:          {discontResult}\nИтог со скидкой:             {allResult}\n\nСпасибо!\n================================";
+            example += $"--------------------------------\nЦена без скидки:             {result}\nСкидка:             {discount}%\nСкидка в денежном эквиваленте:          {discontResult}\nИтог со скидкой:             {allResult}\nМетод оплаты:                 {SelectedOption}\nСпасибо!\n================================";
             textBox.Text = example;
             db.SaveChanges();
         }
@@ -85,69 +98,100 @@ namespace WpfApp1.Waiter
 
         private void End_Click(object sender, RoutedEventArgs e)
         {
-            db.Orders.First(x => x.Id == Order.Id).IsEnd = true;
+            Order orderToRemove = db.Orders.FirstOrDefault(x => x.Id == Order.Id);
+            if (orderToRemove != null)
+            {
+                orderToRemove.IsEnd = true;
+            }
 
+            // Обновляем данные в кассе в зависимости от выбранного метода оплаты
             if (radio1.IsChecked == true)
+            {
                 db.Kassa.First(x => x.Id == 1).Nalichny += all;
+            }
             else
+            {
                 db.Kassa.First(x => x.Id == 1).Card += all;
-            MessageBox.Show("Чек успешно оплачен");
-            db.SaveChanges();
-            this.Close();
+            }
 
+            // Сохраняем изменения в базе данных
+            db.SaveChanges();
+
+            // Выводим сообщение о том, что чек успешно оплачен
+            MessageBox.Show("Чек успешно оплачен");
+
+            // Печатаем чек
+            PrintCheck();
+
+            // Закрываем текущее окно
+            this.Close();
         }
 
 
         private void SplitCheck_Click(object sender, RoutedEventArgs e)
         {
-            SplitCheckWindow splitCheckWindow = new SplitCheckWindow(orderItems);
+            SplitCheckWindow splitCheckWindow = new SplitCheckWindow(Order, orderItems);
             splitCheckWindow.ShowDialog();
 
-            // Получаем выбранные блюда для каждого чека
-            var firstPartItems = splitCheckWindow.FirstPartItems;
-            var secondPartItems = splitCheckWindow.SecondPartItems;
+            // Получаем выбранные блюда для каждого чека из словаря
+            Dictionary<ListBox, List<DishInOrder>> listBoxItemsMap = splitCheckWindow.ListBoxItemsMap;
 
-            // Формируем текст для первого чека
-            string firstPartExample = GetCheckText(firstPartItems);
-
-            // Формируем текст для второго чека
-            string secondPartExample = GetCheckText(secondPartItems);
-
-            // Отображаем чеки в TextBox
-            textBox.Text = firstPartExample + secondPartExample;
-        }
-
-        private string GetCheckText(List<DishInOrder> items)
-        {
-            if (items == null || items.Count == 0)
+            // Проходим по словарю и создаем заказы на основе выбранных блюд для каждого ListBox
+            foreach (var listBox in listBoxItemsMap.Keys)
             {
-                return "Список блюд пуст.";
-            }
-
-            string example = "";
-            decimal result = 0;
-            foreach (DishInOrder item in items)
-            {
-                if (item != null && item.Dish != null)
+                if (listBoxItemsMap[listBox].Count == 0)
+                    continue;
+                // Создаем новый заказ
+                Order newOrder = new Order
                 {
-                    example += $"{item.Dish.Name}         {item.Dish.Price} * {item.DishCount}\n";
-                    result += item.Dish.Price * item.DishCount;
+                    Date = Order.Date,
+                    NumberSeat = Order.NumberSeat,
+                    Count = Order.Count,
+                    IsEnd = Order.IsEnd,
+                    IsCancel = Order.IsCancel,
+                    Dishes = new List<DishInOrder>()
+                };
+
+                // Получаем выбранные блюда для текущего ListBox
+                List<DishInOrder> selectedItems = listBoxItemsMap[listBox];
+
+                // Добавляем выбранные блюда в новый заказ
+                decimal result = 0;
+                foreach (var dish in selectedItems)
+                {
+                    newOrder.Dishes.Add(new DishInOrder { Dish = dish.Dish, DishCount = dish.DishCount });
+                    result += dish.Dish.Price * dish.DishCount;
                 }
+
+                newOrder.Result = result;
+
+                // Сохраняем новый заказ в базе данных
+                db.Orders.Add(newOrder);
             }
-            decimal discontResult = result * Convert.ToDecimal(discount / 100.0);
-            decimal allResult = result - discontResult;
-            all = allResult;
-            // Дополните чек другими данными, если это необходимо
-            example += $"--------------------------------\nЦена без скидки:             {result}\nСкидка:             {discount}%\nСкидка в денежном эквиваленте:          {discontResult}\nИтог со скидкой:             {allResult}\n\nСпасибо!\n================================";
-            return example;
+
+            // Отмечаем исходный заказ как разделенный
+            Order orderToSplit = db.Orders.FirstOrDefault(x => x.Id == Order.Id);
+            if (orderToSplit != null)
+            {
+                orderToSplit.IsSplited = true;
+            }
+
+            // Сохраняем изменения в базе данных
+            db.SaveChanges();
+
+            // Закрываем текущее окно
+            this.Close();
         }
-
-
-
-
-
 
         private void Print_Click(object sender, RoutedEventArgs e)
+        {
+            PrintCheck();
+
+            //wordApp.Quit();
+            MessageBox.Show("Чек сохранен");
+        }
+
+        public void PrintCheck()
         {
             Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
             wordApp.Visible = true;
@@ -155,9 +199,21 @@ namespace WpfApp1.Waiter
             doc.Content.Text = textBox.Text;
 
             doc.SaveAs2("order.docx");
+        }
 
-            //wordApp.Quit();
-            MessageBox.Show("Чек сохранен");
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton radioButton)
+            {
+                SelectedOption = radioButton.Content.ToString();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

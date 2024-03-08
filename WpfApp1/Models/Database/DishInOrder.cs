@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace WpfApp1.Models.Database
 {
     public class DishInOrder
-    {
+    { 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

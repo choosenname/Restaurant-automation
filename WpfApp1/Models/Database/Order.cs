@@ -22,8 +22,8 @@ namespace WpfApp1.Models.Database
         public int Count { get; set; }
         public decimal Result { get; set; }
         public bool IsEnd { get; set; } = false;
-
-        public bool is_cancel { get; set; } = false;
+        public bool IsCancel { get; set; } = false;
+        public bool IsSplited { get; set; } = false;
 
         public List<DishInOrder> Dishes { get; set; }
 

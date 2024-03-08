@@ -11,11 +11,11 @@
             <TextBox IsReadOnly="True" x:Name="textBox" Margin="10" VerticalScrollBarVisibility="Auto"/>
             <Button Content="Печать" Width="auto" Height="30" Margin="0,5,0,0" Padding="20 0" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Print_Click" Background="#2C3E50" Foreground="White"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-                <RadioButton x:Name="radio1" Content="Наличные" Margin="0 0 10 0" GroupName="Options" IsChecked="True"/>
-                <RadioButton x:Name="radio2" Content="Карта" GroupName="Options"/>
+                <RadioButton x:Name="radio1" Content="Наличные" Margin="0 0 10 0" GroupName="Options" IsChecked="True" Checked="RadioButton_Checked"/>
+                <RadioButton x:Name="radio2" Content="Карта" GroupName="Options" Checked="RadioButton_Checked"/>
             </StackPanel>
-            <Button Content="Разделить чек" Width="auto" Height="30" Margin="0,5,0,0" Padding="20 0" HorizontalAlignment="Center" VerticalAlignment="Top" Click="SplitCheck_Click" Background="#2C3E50" Foreground="White"/>
-
+            <Button Content="Разделить чек" Name="SplitBtn"  Width="auto" Height="30" Margin="0,5,0,0" Padding="20 0" HorizontalAlignment="Center" VerticalAlignment="Top" Click="SplitCheck_Click" Background="#2C3E50" Foreground="White"/>
+            
             <Button Content="Оплачено" Width="auto" Height="30" Margin="0,5,0,0" Padding="20 0" HorizontalAlignment="Center" VerticalAlignment="Top" Click="End_Click" Background="#2C3E50" Foreground="White"/>
 
         </StackPanel>

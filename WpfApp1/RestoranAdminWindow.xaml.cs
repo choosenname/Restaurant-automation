@@ -45,7 +45,7 @@ namespace WpfApp1
             orderBoard.Children.Clear();
             using (var db = new DatabaseContext())
             {
-                var orders = db.Orders.Where(o => o.is_cancel == false).ToList();
+                var orders = db.Orders.Where(o => o.IsCancel == false).ToList();
                 if (orders.Count == 0)
                 {
                     Label noOrdersLabel = new Label
@@ -159,7 +159,7 @@ namespace WpfApp1
                     var orderInDb = db.Orders.FirstOrDefault(o => o.Id == order.Id);
                     if (orderInDb != null)
                     {
-                        orderInDb.is_cancel = true;
+                        orderInDb.IsCancel = true;
                         db.SaveChanges();
                     }
 
