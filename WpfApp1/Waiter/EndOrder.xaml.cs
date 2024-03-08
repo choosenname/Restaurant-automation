@@ -139,7 +139,7 @@ namespace WpfApp1.Waiter
             // Проходим по словарю и создаем заказы на основе выбранных блюд для каждого ListBox
             foreach (var listBox in listBoxItemsMap.Keys)
             {
-                if (listBoxItemsMap[listBox].Count == 0)
+                if (listBoxItemsMap.Keys.Count == 0)
                     continue;
                 // Создаем новый заказ
                 Order newOrder = new Order
