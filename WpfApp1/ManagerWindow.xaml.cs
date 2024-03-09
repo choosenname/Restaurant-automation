@@ -28,35 +28,66 @@ namespace WpfApp1
             _cancellationReports = db.CancellationReports.ToList();
         }
 
+
         private void GenerateReport_Click(object sender, RoutedEventArgs e)
         {
-            var startDate = StartDatePicker.SelectedDate ?? DateTime.MinValue;
-            var endDate = EndDatePicker.SelectedDate ?? DateTime.MaxValue;
+            // Проверка на выбор дат
+            if (!StartDatePicker.SelectedDate.HasValue || !EndDatePicker.SelectedDate.HasValue)
+            {
+                MessageBox.Show("Please select both start and end dates.");
+                return;
+            }
 
+            var startDate = StartDatePicker.SelectedDate.Value;
+            var endDate = EndDatePicker.SelectedDate.Value;
+
+            // Проверка на корректность диапазона дат
+            if (endDate < startDate)
+            {
+                MessageBox.Show("End date must be greater than or equal to start date.");
+                return;
+            }
+
+            // Проверка на выбор типа отчета
+            if (ReportTypeComboBox.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select a report type.");
+                return;
+            }
+
+            string dateTimeNowString = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string outputPath = "";
 
             // Выбор типа отчета
             switch (ReportTypeComboBox.SelectedIndex)
             {
                 case 0: // Sales Report
-                    GenerateSalesReport(startDate, endDate, "D:\\SalesReport.xlsx");
+                    outputPath = $"D:\\SalesReport_{dateTimeNowString}.xlsx";
+                    GenerateSalesReport(startDate, endDate, outputPath);
                     break;
                 case 1: // Cash Report
-                    GenerateCashReport(startDate, endDate, "D:\\CashReport.xlsx");
+                    outputPath = $"D:\\CashReport_{dateTimeNowString}.xlsx";
+                    GenerateCashReport(startDate, endDate, outputPath);
                     break;
                 case 2: // Cancellation Report
-                    GenerateCancellationReport("D:\\CancellationReport.xlsx");
+                    outputPath = $"D:\\CancellationReport_{dateTimeNowString}.xlsx";
+                    GenerateCancellationReport(outputPath);
                     break;
                 default:
-                    MessageBox.Show("Please select a report type.");
-                    break;
+                    // Так как мы уже проверили выбор типа отчета выше, этот блок не должен выполняться
+                    return;
             }
 
-            MessageBox.Show("Report generated successfully.");
+            MessageBox.Show($"Report generated successfully at {outputPath}");
         }
 
+
         // Функция формирования отчета о продажах за выбранный период времени
-        public void GenerateSalesReport(DateTime startDate, DateTime endDate, string outputPath)
+        public void GenerateSalesReport(DateTime startDate, DateTime endDate, string basePath)
         {
+            string dateTimeNowString = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string outputPath = $"{basePath}_{dateTimeNowString}.xlsx"; // Формирование конечного пути с учетом текущего времени
+
             var sales = _orders.Where(order => order.Date >= startDate && order.Date <= endDate && order.IsEnd == true)
                                .GroupBy(order => order.Date.Date)
                                .Select(group => new
@@ -93,9 +124,13 @@ namespace WpfApp1
             excelApp.Quit();
         }
 
+
         // Функция формирования отчета о кассовых операциях
-        public void GenerateCashReport(DateTime startDate, DateTime endDate, string outputPath)
+        public void GenerateCashReport(DateTime startDate, DateTime endDate, string basePath)
         {
+            string dateTimeNowString = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string outputPath = $"{basePath}_{dateTimeNowString}.xlsx"; // Формирование конечного пути с учетом текущего времени
+
             var cashTransactions = _orders.Where(order => order.Date >= startDate && order.Date <= endDate && order.IsEnd == true)
                                           .Select(order => new
                                           {
@@ -125,9 +160,11 @@ namespace WpfApp1
             excelApp.Quit();
         }
 
-        // Функция формирования отчета о кассовых операциях
-        public void GenerateCancellationReport(string outputPath)
+        public void GenerateCancellationReport(string basePath)
         {
+            string dateTimeNowString = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string outputPath = $"{basePath}_{dateTimeNowString}.xlsx"; // Формирование конечного пути с учетом текущего времени
+
             // Получение данных об отмененных заказах
             var cancelledOrders = _orders.Where(order => order.IsCancel)
                                           .Join(_cancellationReports,
@@ -163,5 +200,6 @@ namespace WpfApp1
             workbook.Close();
             excelApp.Quit();
         }
+
     }
 }
