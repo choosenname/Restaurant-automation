@@ -193,12 +193,13 @@ namespace WpfApp1.Waiter
 
         public void PrintCheck()
         {
+            string dateTimeNowString = DateTime.Now.ToString("yyyyMMddHHmmss");
             Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
             wordApp.Visible = true;
             Document doc = wordApp.Documents.Add();
             doc.Content.Text = textBox.Text;
 
-            doc.SaveAs2("order.docx");
+            doc.SaveAs2($"order_{dateTimeNowString}.docx");
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)

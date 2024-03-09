@@ -28,17 +28,28 @@ namespace WpfApp1.Waiter
         List<OrderDishModel> orderDishes = new List<OrderDishModel>();
         public AddOrder()
         {
+            InitializeComponent();
             Window window = new Window { Height = 200, Width = 200, WindowStartupLocation = WindowStartupLocation.CenterScreen };
             TextBox textBox1 = new TextBox();
             TextBox textBox2 = new TextBox();
             Button submitButton = new Button();
-
             textBox1.Margin = new Thickness(10);
             textBox2.Margin = new Thickness(10);
             submitButton.Content = "Далее";
             submitButton.Margin = new Thickness(10);
+
             submitButton.Click += (sender, e) =>
             {
+                if(string.IsNullOrEmpty(textBox1.Text))
+                {
+                    MessageBox.Show("Пожалуйста, введите номер стола.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                if (string.IsNullOrEmpty(textBox2.Text))
+                {
+                    MessageBox.Show("Пожалуйста, введите количество гостей.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 if (!int.TryParse(textBox1.Text, out int tableNumber) || tableNumber < 0)
                 {
                     MessageBox.Show("Пожалуйста, введите корректный номер стола (положительное целое число).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -53,9 +64,8 @@ namespace WpfApp1.Waiter
 
                 numberSeat = tableNumber.ToString();
                 count = guestsCount;
-
                 window.Close();
-                InitializeComponent();  
+                InitializeComponent();
                 categoryComboBox.ItemsSource = db.DishCategories.ToList();
                 categoryComboBox.SelectedIndex = 0;
             };
@@ -69,7 +79,10 @@ namespace WpfApp1.Waiter
             stackPanel.Children.Add(submitButton);
 
             window.Content = stackPanel;
+
             window.ShowDialog();
+
+
         }
 
 
