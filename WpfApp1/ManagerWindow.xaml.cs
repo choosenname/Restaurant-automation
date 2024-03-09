@@ -12,15 +12,19 @@ namespace WpfApp1
 {
     public partial class ManagerWindow : System.Windows.Window
     {
-        private readonly List<Order> _orders;
+        private List<Order> _orders
+        {
+            get
+            {
+                return db.Orders.ToList();
+            }
+        }
         private readonly List<CancellationReport> _cancellationReports;
         DatabaseContext db = new DatabaseContext();
 
         public ManagerWindow()
         {
             InitializeComponent();
-
-            _orders = db.Orders.ToList();
             _cancellationReports = db.CancellationReports.ToList();
         }
 
@@ -34,13 +38,13 @@ namespace WpfApp1
             switch (ReportTypeComboBox.SelectedIndex)
             {
                 case 0: // Sales Report
-                    GenerateSalesReport(startDate, endDate, "SalesReport.xlsx");
+                    GenerateSalesReport(startDate, endDate, "D:\\SalesReport.xlsx");
                     break;
                 case 1: // Cash Report
-                    GenerateCashReport(startDate, endDate, "CashReport.xlsx");
+                    GenerateCashReport(startDate, endDate, "D:\\CashReport.xlsx");
                     break;
                 case 2: // Cancellation Report
-                    GenerateCancellationReport("CancellationReport.xlsx");
+                    GenerateCancellationReport("D:\\CancellationReport.xlsx");
                     break;
                 default:
                     MessageBox.Show("Please select a report type.");
@@ -53,14 +57,14 @@ namespace WpfApp1
         // Функция формирования отчета о продажах за выбранный период времени
         public void GenerateSalesReport(DateTime startDate, DateTime endDate, string outputPath)
         {
-            var sales = _orders.Where(order => order.Date >= startDate && order.Date <= endDate && order.IsEnd)
+            var sales = _orders.Where(order => order.Date >= startDate && order.Date <= endDate && order.IsEnd == true)
                                .GroupBy(order => order.Date.Date)
                                .Select(group => new
                                {
                                    Date = group.Key,
                                    TotalSales = group.Sum(order => order.Result),
                                    TotalItemsSold = group.Sum(order => order.Count),
-                                   CardPayments = group.Sum(order => order.Dishes.Sum(dish => dish.Dish.Price * dish.DishCount))
+                                   CardPayments = group.Sum(order => order.Result - (order.Dishes != null ? order.Dishes.Sum(dish => dish.Dish.Price * dish.DishCount) : 0))
                                })
                                .ToList();
 
@@ -92,11 +96,11 @@ namespace WpfApp1
         // Функция формирования отчета о кассовых операциях
         public void GenerateCashReport(DateTime startDate, DateTime endDate, string outputPath)
         {
-            var cashTransactions = _orders.Where(order => order.Date >= startDate && order.Date <= endDate && order.IsEnd)
+            var cashTransactions = _orders.Where(order => order.Date >= startDate && order.Date <= endDate && order.IsEnd == true)
                                           .Select(order => new
                                           {
                                               Date = order.Date,
-                                              Nalichny = order.Result
+                                              Nalichny = order.Result - (order.Dishes != null ? order.Dishes.Sum(dish => dish.Dish.Price * dish.DishCount) : 0)
                                           })
                                           .ToList();
 

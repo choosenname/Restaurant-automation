@@ -45,7 +45,7 @@ namespace WpfApp1
             orderBoard.Children.Clear();
             using (var db = new DatabaseContext())
             {
-                var orders = db.Orders.Where(o => o.IsCancel == false).ToList();
+                var orders = db.Orders.Where(o => o.IsCancel == false && o.IsSplited == false).ToList();
                 if (orders.Count == 0)
                 {
                     Label noOrdersLabel = new Label
