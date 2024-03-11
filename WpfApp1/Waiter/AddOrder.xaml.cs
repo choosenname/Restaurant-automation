@@ -26,7 +26,7 @@ namespace WpfApp1.Waiter
         int count = 0;
         DatabaseContext db = new DatabaseContext();
         List<OrderDishModel> orderDishes = new List<OrderDishModel>();
-        public AddOrder()
+        public AddOrder(Order? order = null)
         {
             InitializeComponent();
             Window window = new Window { Height = 200, Width = 200, WindowStartupLocation = WindowStartupLocation.CenterScreen };
@@ -37,6 +37,19 @@ namespace WpfApp1.Waiter
             textBox2.Margin = new Thickness(10);
             submitButton.Content = "Далее";
             submitButton.Margin = new Thickness(10);
+
+            if (order != null)
+            {
+                textBox1.Text = order.NumberSeat;
+                textBox2.Text = order.Count.ToString();
+
+                var orderItems = db.DishInOrders.Include(x => x.Dish).Include(x => x.Order).Where(x => x.Order.Id == order.Id).ToList();
+
+                foreach (var dish in orderItems)
+                {
+                    orderDishes.Add(new OrderDishModel { Dish = dish.Dish, Count = dish.DishCount });
+                }
+            }
 
             submitButton.Click += (sender, e) =>
             {
@@ -81,7 +94,7 @@ namespace WpfApp1.Waiter
             window.Content = stackPanel;
 
             window.ShowDialog();
-
+            UIAllBoard();
 
         }
 
@@ -297,7 +310,7 @@ namespace WpfApp1.Waiter
             db.SaveChanges();
 
             MessageBox.Show("Заказ успешно добавлен");
-
+            this.DialogResult = true;
             this.Close();
         }
 

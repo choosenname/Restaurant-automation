@@ -127,6 +127,25 @@ namespace WpfApp1.Waiter
             this.Close();
         }
 
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            AddOrder addOrder = new AddOrder(Order);
+            var dialogResult = addOrder.ShowDialog();
+
+            if (dialogResult ?? false)
+            {
+                Order orderToSplit = db.Orders.FirstOrDefault(x => x.Id == Order.Id);
+                if (orderToSplit != null)
+                {
+                    orderToSplit.IsSplited = true;
+                }
+
+                // Сохраняем изменения в базе данных
+                db.SaveChanges();
+            }
+
+            this.Close();
+        }
 
         private void SplitCheck_Click(object sender, RoutedEventArgs e)
         {
