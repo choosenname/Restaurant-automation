@@ -7,7 +7,7 @@
 
             <ListBox x:Name="listBox" Height="300"  Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-            <Button Content="Подтвердить" HorizontalAlignment="Center" Margin="0,10" Click="Confirm_Click"/>
+            <Button Content="Подтвердить" HorizontalAlignment="Center" Margin="0,10" Click="Confirm_Click" Width="auto" Height="30" Padding="20 0" VerticalAlignment="Top" Background="#2C3E50" Foreground="White"/>
         </StackPanel>
     </ScrollViewer>
 </Window>
