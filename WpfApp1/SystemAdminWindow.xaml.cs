@@ -134,7 +134,7 @@ namespace WpfApp1
         {
             try
             {
-                var menuData = await _menuService.GetMenuDataAsync();   
+                var menuData = await _menuService.GetMenuDataAsync();
             }
             catch (Exception ex)
             {
@@ -154,7 +154,7 @@ namespace WpfApp1
 
             try
             {
-                using (DatabaseContext dbContext = new DatabaseContext()) 
+                using (DatabaseContext dbContext = new DatabaseContext())
                 {
                     var currentUser = dbContext.Employees.FirstOrDefault();
 
@@ -204,7 +204,7 @@ namespace WpfApp1
         private void Add_Dish_Click(object sender, RoutedEventArgs e)
         {
             AddDish addDish = new AddDish();
-            addDish.ShowDialog();   
+            addDish.ShowDialog();
         }
 
         private void All_Dish_Click(object sender, RoutedEventArgs e)
@@ -221,10 +221,10 @@ namespace WpfApp1
             EmployeeSchedulePage employeeSchedulePage = new EmployeeSchedulePage(allEmployees);
 
             // Отображаем страницу
-            employeeSchedulePage.Show();   
-    }
-    
-    private async void ExportExcelButton_Click(object sender, RoutedEventArgs e)
+            employeeSchedulePage.Show();
+        }
+
+        private async void ExportExcelButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -237,4 +237,5 @@ namespace WpfApp1
                 MessageBox.Show($"Ошибка при экспорте: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+    }
 }
