@@ -20,6 +20,6 @@
             <ComboBoxItem Content="Cancellation Report"/>
         </ComboBox>
 
-        <Button Grid.Row="3" Content="Generate Report" Margin="10" Click="GenerateReport_Click"/>
+        <Button Grid.Row="3" Content="Generate Report" Margin="10" Click="GenerateReport_Click" Width="auto" Height="30" Padding="20 0" VerticalAlignment="Top" Background="#2C3E50" Foreground="White"/>
     </Grid>
 </Window>
