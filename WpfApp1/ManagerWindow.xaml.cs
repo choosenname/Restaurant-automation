@@ -1,4 +1,10 @@
-﻿using System.Windows;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Navigation;
+using System.Windows;
 using Microsoft.Office.Interop.Excel;
 using WpfApp1.Models;
 using WpfApp1.Models.Database;
@@ -160,7 +166,6 @@ public partial class ManagerWindow : Window
             worksheet.Cells[row, 2] = transaction.Nalichny;
             row++;
         }
-
         workbook.SaveAs(outputPath, XlFileFormat.xlWorkbookDefault);
         workbook.Close();
         excelApp.Quit();
@@ -202,7 +207,6 @@ public partial class ManagerWindow : Window
             worksheet.Cells[row, 3] = cancelledOrder.Reason;
             row++;
         }
-
         workbook.SaveAs(outputPath, XlFileFormat.xlWorkbookDefault);
         workbook.Close();
         excelApp.Quit();
