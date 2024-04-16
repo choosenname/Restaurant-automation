@@ -25,6 +25,7 @@ namespace WpfApp1
     public partial class SystemAdminWindow : Window
     {
         private MenuService _menuService;
+        public DatabaseContext _dbContext;
 
         public SystemAdminWindow()
         {
@@ -32,6 +33,7 @@ namespace WpfApp1
             string userName = GetCurrentUserName();
             var dbContext = new DatabaseContext();
             _menuService = new MenuService(dbContext);
+            _dbContext = dbContext;
             LoadMenuDataAsync();
         }
         private async void ExportButton_Click(object sender, RoutedEventArgs e)
@@ -168,6 +170,17 @@ namespace WpfApp1
         {
             AllDishes allDishes = new AllDishes();
             allDishes.ShowDialog();
+        }
+        private void ShowEmployeeSchedule_Click(object sender, RoutedEventArgs e)
+        {
+
+            List<Employee> allEmployees = _dbContext.Employees.ToList();
+
+            // Создаем экземпляр EmployeeSchedulePage, передавая список всех сотрудников в конструктор
+            EmployeeSchedulePage employeeSchedulePage = new EmployeeSchedulePage(allEmployees);
+
+            // Отображаем страницу
+            employeeSchedulePage.Show();
         }
     }
 }

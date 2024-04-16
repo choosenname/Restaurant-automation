@@ -31,25 +31,22 @@
         </Grid.ColumnDefinitions>
 
         <!-- Первая колонка -->
-        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="20">
-            <Button Content="Сотрудники" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="All_Employee_Click" Background="#2C3E50" Foreground="White"/>
-            <Button Content="Добавить сотрудника" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="Add_Employee_Click" Background="#2C3E50" Foreground="White"/>
-            <Button Content="Удалить сотрудника" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="Delete_Employee_Click" Background="#2C3E50" Foreground="White"/>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="20" HorizontalAlignment="Center">
+            <Button Content="Сотрудники" Width="150" Height="30" Margin="0,5,0,0" Click="All_Employee_Click" Background="#2C3E50" Foreground="White"/>
+            <Button Content="Добавить сотрудника" Width="150" Height="30" Margin="0,5,0,0" Click="Add_Employee_Click" Background="#2C3E50" Foreground="White"/>
+            <Button Content="Удалить сотрудника" Width="150" Height="30" Margin="0,5,0,0" Click="Delete_Employee_Click" Background="#2C3E50" Foreground="White"/>
             <Button Name="ExportButton" Content="Экспорт в Word" Click="ExportButton_Click" Background="#2C3E50" Foreground="White"  Width="150" Height="30" Margin="0,5,0,0"/>
         </StackPanel>
 
         <!-- Вторая колонка -->
-        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,20,0" Height="113">
-            <Button Content="Добавить блюдо" Width="150" Height="30" Click="Add_Dish_Click" Background="#2C3E50" Foreground="White"/>
-            <Button Content="Меню" Width="150" Height="30" Click="All_Dish_Click"  Margin="0,5,0,0" Background="#2C3E50" Foreground="White"/>
-            <Button Content="Удалить блюдо" Width="150" Height="30" Margin="0,5,0,0" HorizontalAlignment="Center" Click="Delete_Dish_Click" Background="#2C3E50" Foreground="White"/>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20" HorizontalAlignment="Center">
+            <Button Content="Добавить блюдо" Width="150" Height="30" Margin="0,5,0,0" Click="Add_Dish_Click" Background="#2C3E50" Foreground="White" RenderTransformOrigin="0.469,-1.304"/>
+            <Button Content="Меню" Width="150" Height="30" Margin="0,5,0,0" Click="All_Dish_Click" Background="#2C3E50" Foreground="White" />
+            <Button Content="Удалить блюдо" Width="150" Height="30" Margin="0,5,0,0" Click="Delete_Dish_Click" Background="#2C3E50" Foreground="White"/>
+            <Button Content="График работы" Click="ShowEmployeeSchedule_Click" Background="#2C3E50" Foreground="White" Width="150" Height="30" HorizontalAlignment="Center" Grid.Column="1"  Margin="0,5,0,0"/>
         </StackPanel>
-
-        <!-- Панель инструментов вверху окна -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,180,0,0" Grid.Column="1">
-            <Button Width="30" Height="30" Margin="0,0,10,0" Click="Logout_Click" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource LogoutButtonStyle}">
-                <Image Source="C:/Users/xxsam/OneDrive/Рабочий стол/WpfApp1/WpfApp1/Images/logout.png" Width="20" Height="20" />
-            </Button>
-        </StackPanel>
+        <Button Margin="105,192,65,12" Click="Logout_Click" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource LogoutButtonStyle}" RenderTransformOrigin="-1.656,0.723">
+            <Image Source="Images/logout.png" Width="20" Height="20" Margin="265,14,-255,-4" />
+        </Button>
     </Grid>
 </Window>

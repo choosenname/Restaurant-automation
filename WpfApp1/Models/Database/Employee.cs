@@ -19,5 +19,7 @@ namespace WpfApp1.Models.Database
         public int TypeId { get; set; }
 
         public EmployeeType EmployeeType { get; set; }
+        public string WorkSchedule { get; set; } 
+
     }
 }

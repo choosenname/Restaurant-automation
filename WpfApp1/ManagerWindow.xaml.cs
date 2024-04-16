@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Navigation;
 using Microsoft.Office.Interop.Excel;
 using WpfApp1.Models;
 using WpfApp1.Models.Database;
@@ -160,6 +161,7 @@ namespace WpfApp1
             excelApp.Quit();
         }
 
+
         public void GenerateCancellationReport(string basePath)
         {
             string dateTimeNowString = DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -200,6 +202,12 @@ namespace WpfApp1
             workbook.Close();
             excelApp.Quit();
         }
+
+
+
+
+
+
 
     }
 }
