@@ -16,13 +16,15 @@ using WpfApp1.Models;
 using WpfApp1.Models.Database;
 using WpfApp1.Services;
 using WpfApp1.SystemAdmin;
+using Microsoft.Office.Interop.Excel;
+using System.Collections.Generic;
 
 namespace WpfApp1
 {
     /// <summary>
     /// Логика взаимодействия для SystemAdminWindow.xaml
     /// </summary>
-    public partial class SystemAdminWindow : Window
+    public partial class SystemAdminWindow : System.Windows.Window
     {
         private MenuService _menuService;
 
@@ -84,6 +86,45 @@ namespace WpfApp1
             }
 
             wordApp.Visible = true; // Показываем документ пользователю
+        }
+
+        private void ExportMenuToExcel(List<DishCategory> categoriesWithDishes)
+        {
+            var excelApp = new Microsoft.Office.Interop.Excel.Application();
+            var workbook = excelApp.Workbooks.Add();
+            var worksheet = (Worksheet)workbook.Worksheets[1];
+
+            int currentRow = 1;
+
+            foreach (var category in categoriesWithDishes)
+            {
+                // Добавляем заголовок категории
+                worksheet.Cells[currentRow, 1] = category.Name;
+                worksheet.Cells[currentRow, 1].Font.Bold = true;
+                currentRow++;
+
+                if (category.Dishes.Any())
+                {
+                    // Добавляем заголовки столбцов
+                    worksheet.Cells[currentRow, 1] = "Название блюда";
+                    worksheet.Cells[currentRow, 2] = "Цена";
+                    worksheet.Rows[currentRow].Font.Bold = true;
+                    currentRow++;
+
+                    // Заполняем таблицу блюдами
+                    foreach (var dish in category.Dishes)
+                    {
+                        worksheet.Cells[currentRow, 1] = dish.Name;
+                        worksheet.Cells[currentRow, 2] = dish.Price.ToString("C");
+                        currentRow++;
+                    }
+                }
+
+                // Добавляем пустую строку после категории
+                currentRow++;
+            }
+
+            excelApp.Visible = true;
         }
 
 
@@ -168,6 +209,20 @@ namespace WpfApp1
         {
             AllDishes allDishes = new AllDishes();
             allDishes.ShowDialog();
+        }
+
+        private async void ExportExcelButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Предполагая, что _menuService уже инициализирован и содержит метод GetMenuDataAsync
+                var menuData = await _menuService.GetMenuDataAsync();
+                ExportMenuToExcel(menuData);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при экспорте: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
