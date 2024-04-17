@@ -50,8 +50,10 @@ namespace WpfApp1.SystemAdmin
                 string id = employeeId.Text;
                 string name = txtName.Text;
                 EmployeeType type = (EmployeeType)typeComboBox.SelectedItem;
+                string workSchedule = txtWorkSchedule.Text;
 
-                Employee employee = new Employee { Id = id, Name = name, EmployeeType = type, TypeId = type.Id};
+                Employee employee = new Employee { Id = id, Name = name, EmployeeType = type
+                    , TypeId = type.Id, WorkSchedule = workSchedule};
                 db.Employees.Add(employee);
                 db.SaveChanges();
 

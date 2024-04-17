@@ -11,7 +11,7 @@ namespace WpfApp1.Models
 {
     public class DatabaseContext : DbContext
     {
-        string connectionString = @"Server=DESKTOP-OHTH8Q3\SQLEXPRESS;Database=wpfApp;Integrated Security=True;TrustServerCertificate=True";
+        string connectionString = @"Server=DESKTOP-P1K6VF8;Database=wpfApp;Integrated Security=True;TrustServerCertificate=True";
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeType> EmployeeTypes { get; set; }
@@ -24,7 +24,7 @@ namespace WpfApp1.Models
         public DbSet<Kassa> Kassa { get; set; }
         public DatabaseContext()
         {
-            //Database.EnsureDeleted();
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
