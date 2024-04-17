@@ -14,6 +14,9 @@
             <TextBlock Text="Имя:"/>
             <TextBox x:Name="txtName" Width="200" HorizontalAlignment="Left"/>
 
+            <TextBlock Text="Время работы:"/>
+            <TextBox x:Name="txtWorkSchedule" Width="200" HorizontalAlignment="Left"/>
+
             <TextBlock Text="Тип пользователя:"/>
             <ComboBox x:Name="typeComboBox" Width="200" HorizontalAlignment="Left" Margin="0 5 0 0"/>
 
