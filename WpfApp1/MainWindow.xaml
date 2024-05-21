@@ -13,9 +13,15 @@
         <TextBlock Text="Вход" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20"/>
 
         <StackPanel Grid.Row="1" Margin="20">
-            <TextBox x:Name="txtId" Text="Введите ваш ID" Foreground="LightGray" Height="45" Margin="0,10"
+            <!--<TextBox x:Name="txtId" Text="Введите ваш ID" Foreground="LightGray" Height="45" Margin="0,10"
+         BorderBrush="#CCCCCC" BorderThickness="1" Background="#FFFFFF"
+         FontSize="16" Padding="10" GotFocus="TxtId_GotFocus" LostFocus="TxtId_LostFocus"/>-->
+
+
+            <TextBox x:Name="txtCode" Text="Введите ваш код" Foreground="LightGray" Height="45" Margin="0,10"
          BorderBrush="#CCCCCC" BorderThickness="1" Background="#FFFFFF"
          FontSize="16" Padding="10" GotFocus="TxtId_GotFocus" LostFocus="TxtId_LostFocus"/>
+
 
         </StackPanel>
 

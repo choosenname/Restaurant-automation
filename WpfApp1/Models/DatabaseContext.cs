@@ -11,7 +11,7 @@ namespace WpfApp1.Models
 {
     public class DatabaseContext : DbContext
     {
-        string connectionString = @"Server=DESKTOP-P1K6VF8;Database=wpfApp;Integrated Security=True;TrustServerCertificate=True";
+        string connectionString = @"Server=DESKTOP-OHTH8Q3\SQLEXPRESS;Database=wpfApp;Integrated Security=True;TrustServerCertificate=True";
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeType> EmployeeTypes { get; set; }
@@ -24,7 +24,7 @@ namespace WpfApp1.Models
         public DbSet<Kassa> Kassa { get; set; }
         public DatabaseContext()
         {
-            Database.EnsureDeleted();
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
@@ -49,7 +49,7 @@ namespace WpfApp1.Models
                 .HasForeignKey(r => r.TypeId);
 
             modelBuilder.Entity<Employee>().HasData(
-                new Employee { Id = "100000", Name = "Систесный администратор", TypeId = 1, WorkSchedule = "23.06.2004" });
+                new Employee { Id = "100000", Code= "100000", Name = "Систесный администратор", TypeId = 1, WorkSchedule = "23.06.2004" });
 
             modelBuilder.Entity<Kassa>().HasData(
                 new Kassa { Id = 1, Nalichny = 0, Card = 0, Return = 0});

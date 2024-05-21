@@ -16,6 +16,8 @@ namespace WpfApp1.Models.Database
 
         public string Name { get; set; }
 
+        public string Code { get; set; }
+
         public int TypeId { get; set; }
 
         public EmployeeType EmployeeType { get; set; }

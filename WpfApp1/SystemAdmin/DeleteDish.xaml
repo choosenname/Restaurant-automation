@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
         mc:Ignorable="d"
-        Title="DeleteDish"  Height="300" Width="400"
+        Title="Удаление блюда"  Height="300" Width="400"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <StackPanel VerticalAlignment="Top">

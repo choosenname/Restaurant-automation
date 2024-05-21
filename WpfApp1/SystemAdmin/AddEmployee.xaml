@@ -5,12 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
         mc:Ignorable="d"
-        Title="AddEmployee" Height="280" Width="300"
+        Title="Добавление работника" Height="305" Width="300"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <StackPanel  Margin="20">
-            <TextBlock Text="Id:"/>
-            <TextBlock x:Name="employeeId" Text="" FontWeight="Bold" Margin="0 5"/>
+            <TextBlock x:Name="employeeId" Text="" FontWeight="Bold" Margin="0 5" Visibility="Hidden" />
+
+
+            <TextBlock Text="Код:"/>
+            <TextBlock x:Name="employeeCode" Text="" FontWeight="Bold" Margin="0 5"/>
+
+
             <TextBlock Text="Имя:"/>
             <TextBox x:Name="txtName" Width="200" HorizontalAlignment="Left"/>
 

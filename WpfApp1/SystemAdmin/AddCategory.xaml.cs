@@ -28,10 +28,24 @@ namespace WpfApp1.SystemAdmin
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            db.DishCategories.Add(new Models.Database.DishCategory { Name = txtName.Text });
-            db.SaveChanges();
-            MessageBox.Show("Категория успешно добавлена");
-            this.Close();
+            if (string.IsNullOrWhiteSpace(txtName.Text))
+            {
+                MessageBox.Show("Введите название категории.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                db.DishCategories.Add(new Models.Database.DishCategory { Name = txtName.Text });
+                db.SaveChanges();
+                MessageBox.Show("Категория успешно добавлена");
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при добавлении категории: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
     }
 }

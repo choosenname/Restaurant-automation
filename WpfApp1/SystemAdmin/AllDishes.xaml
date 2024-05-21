@@ -22,15 +22,28 @@
                 </TextBox>
             </StackPanel>
 
-            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" Height="auto" CanUserAddRows="false" >
+            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" Height="auto" CanUserAddRows="false">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" IsReadOnly="True" Binding="{Binding Id}" Width="Auto" />
                     <DataGridTextColumn Header="Название" IsReadOnly="False" Binding="{Binding Name}" Width="*" />
-                    <DataGridTextColumn Header="Цена"  IsReadOnly="False"  Binding="{Binding Price}" Width="auto" />
-                    <DataGridTextColumn Header="Категория"  IsReadOnly="True" Binding="{Binding Category.Name}" Width="*" />
+
+                    <DataGridTemplateColumn Header="Цена" Width="auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Price, StringFormat={}{0} бел.руб}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Header="Категория" IsReadOnly="True" Binding="{Binding Category.Name}" Width="*" />
                     <DataGridTextColumn Header="IdCategory" IsReadOnly="True" Binding="{Binding Category.Id}" Visibility="Hidden" />
                 </DataGrid.Columns>
             </DataGrid>
+
         </StackPanel>
     </Grid>
 </Window>

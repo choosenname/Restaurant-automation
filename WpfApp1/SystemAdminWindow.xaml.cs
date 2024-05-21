@@ -18,6 +18,7 @@ using WpfApp1.Services;
 using WpfApp1.SystemAdmin;
 using Microsoft.Office.Interop.Excel;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace WpfApp1
 {
@@ -78,7 +79,8 @@ namespace WpfApp1
                     foreach (var dish in category.Dishes)
                     {
                         table.Cell(row, 1).Range.Text = dish.Name;
-                        table.Cell(row, 2).Range.Text = $"{dish.Price:C}";
+                        table.Cell(row, 2).Range.Text = $"{dish.Price.ToString("N2")} бел.руб";
+
                         row++;
                     }
                 }
@@ -117,7 +119,7 @@ namespace WpfApp1
                     foreach (var dish in category.Dishes)
                     {
                         worksheet.Cells[currentRow, 1] = dish.Name;
-                        worksheet.Cells[currentRow, 2] = dish.Price.ToString("C");
+                        worksheet.Cells[currentRow, 2].Value = dish.Price.ToString("N2") + " бел.руб";
                         currentRow++;
                     }
                 }

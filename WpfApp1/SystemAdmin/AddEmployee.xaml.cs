@@ -32,11 +32,23 @@ namespace WpfApp1.SystemAdmin
             } while (db.Employees.Any(x => x.Id == id.ToString()));
             return id;
         }
-        
+
+        private int GetUniqueCode()
+        {
+            int code;
+            do
+            {
+                code = new Random().Next(100000, 1000000);
+            } while (db.Employees.Any(x => x.Code == code.ToString()));
+            return code;
+        }
+
         public AddEmployee()
         {
+
             InitializeComponent();
             employeeId.Text = GetUniqueId().ToString();
+            employeeCode.Text= GetUniqueCode().ToString();
             typeComboBox.ItemsSource = db.EmployeeTypes.ToList();
             typeComboBox.SelectedIndex = 0;
         }
@@ -45,28 +57,57 @@ namespace WpfApp1.SystemAdmin
         {
             try
             {
-                if (txtName.Text == null || typeComboBox.SelectedItem == null) throw new Exception("Заполните все данные");
+                if (string.IsNullOrWhiteSpace(txtName.Text))
+                {
+                    MessageBox.Show("Пожалуйста, введите имя сотрудника.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (typeComboBox.SelectedItem == null)
+                {
+                    MessageBox.Show("Пожалуйста, выберите тип сотрудника.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtWorkSchedule.Text))
+                {
+                    MessageBox.Show("Пожалуйста, введите расписание работы.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
                 string id = employeeId.Text;
+                string code = employeeCode.Text;
                 string name = txtName.Text;
                 EmployeeType type = (EmployeeType)typeComboBox.SelectedItem;
                 string workSchedule = txtWorkSchedule.Text;
 
-                Employee employee = new Employee { Id = id, Name = name, EmployeeType = type
-                    , TypeId = type.Id, WorkSchedule = workSchedule};
+                Employee employee = new Employee
+                {
+                    Id = id,
+                    Name = name,
+                    EmployeeType = type,
+                    TypeId = type.Id,
+                    WorkSchedule = workSchedule,
+                    Code = code
+                };
+
                 db.Employees.Add(employee);
                 db.SaveChanges();
 
-                MessageBox.Show("Сотрудник успешно добавлен");
+                MessageBox.Show("Сотрудник успешно добавлен", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Очистка полей ввода после добавления сотрудника
                 txtName.Text = "";
+                txtWorkSchedule.Text = "";
                 typeComboBox.SelectedIndex = 0;
                 employeeId.Text = GetUniqueId().ToString();
+                employeeCode.Text = GetUniqueCode().ToString();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            
         }
+
     }
 }

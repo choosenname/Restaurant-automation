@@ -32,19 +32,29 @@ namespace WpfApp1.SystemAdmin
         {
             var viewModel = DataContext as DeleteViewModel;
 
-            if(viewModel != null)
+            if (viewModel != null)
             {
                 List<string> ids = viewModel.EmplDeletes
-                    .Where(x => x.IsSelected)
+                    .Where(x => x.IsSelected && x.IsDeletable)
                     .Select(x => x.Id)
                     .ToList();
+
+                if (ids.Count == 0)
+                {
+                    // Отображение сообщения об ошибке, если ни один сотрудник не выбран для удаления
+                    MessageBox.Show("Не выбрано ни одного сотрудника для удаления.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 foreach (string id in ids)
                 {
                     Employee employee = db.Employees.First(x => x.Id == id);
                     db.Employees.Remove(employee);
                 }
-                MessageBox.Show("Выбранные сотрудники удалены");
+
                 db.SaveChanges();
+                MessageBox.Show("Выбранные сотрудники удалены", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 DataContext = new DeleteViewModel();
             }
         }

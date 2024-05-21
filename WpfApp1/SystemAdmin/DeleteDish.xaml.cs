@@ -38,15 +38,24 @@ namespace WpfApp1.SystemAdmin
                     .Where(x => x.IsSelected)
                     .Select(x => x.Id)
                     .ToList();
+
+                if (ids.Count == 0)
+                {
+                    MessageBox.Show("Выберите хотя бы одно блюдо для удаления.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 foreach (string id in ids)
                 {
                     Dish dish = db.Dishes.First(x => x.Id == Convert.ToInt32(id));
                     db.Dishes.Remove(dish);
                 }
-                MessageBox.Show("Выбранные блюда удалены");
+
                 db.SaveChanges();
+                MessageBox.Show("Выбранные блюда удалены");
                 DataContext = new DeleteViewModel();
             }
         }
+
     }
 }

@@ -58,6 +58,11 @@ namespace WpfApp1.Waiter
             submitButton.Margin = new Thickness(10);
             submitButton.Click += (sender, e) =>
             {
+                if (!int.TryParse(textBox1.Text, out int discount) || discount < 0)
+                {
+                    MessageBox.Show("Пожалуйста, введите корректный размер скидки (положительное целое число больше нуля).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 discount = Convert.ToInt32(textBox1.Text);
                 window.Close();
                 InitializeComponent();

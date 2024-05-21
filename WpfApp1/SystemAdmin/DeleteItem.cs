@@ -11,5 +11,7 @@ namespace WpfApp1.SystemAdmin
         public string Id { get; set; }
         public string Info { get; set; }
         public bool IsSelected { get; set; }
+        public bool IsDeletable { get; set; }
+
     }
 }

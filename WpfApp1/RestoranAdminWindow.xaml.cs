@@ -101,7 +101,7 @@ namespace WpfApp1
             };
             Label priceLabel = new Label
             {
-                Content = $"Цена: {result} руб.",
+                Content = $"Цена: {result} бел.руб.",
                 Width = 100,
                 Height = double.NaN
             };

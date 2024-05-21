@@ -31,7 +31,7 @@ namespace WpfApp1
             TextBox textBox = (TextBox)sender;
             if (string.IsNullOrWhiteSpace(textBox.Text))
             {
-                textBox.Text = "Введите ваш ID";
+                textBox.Text = "Введите ваш код";
                 textBox.Foreground = Brushes.LightGray;
             }
         }
@@ -39,7 +39,7 @@ namespace WpfApp1
         private void TxtId_GotFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = (TextBox)sender;
-            if (textBox.Text == "Введите ваш ID")
+            if (textBox.Text == "Введите ваш код")
             {
                 textBox.Text = "";
                 textBox.Foreground = Brushes.Black;
@@ -48,12 +48,12 @@ namespace WpfApp1
 
         private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!txtId.IsFocused && !IsMouseOverTextBox(txtId))
+            if (!txtCode.IsFocused && !IsMouseOverTextBox(txtCode))
             {
-                if (string.IsNullOrWhiteSpace(txtId.Text))
+                if (string.IsNullOrWhiteSpace(txtCode.Text))
                 {
-                    txtId.Text = "Введите ваш ID";
-                    txtId.Foreground = Brushes.LightGray;
+                    txtCode.Text = "Введите ваш код";
+                    txtCode.Foreground = Brushes.LightGray;
                 }
             }
         }
@@ -70,11 +70,11 @@ namespace WpfApp1
         {
             try
             {
-                string id = txtId.Text;
-                if (id == null) throw new Exception("Введите id");
-                if (!db.Employees.Any(x => x.Id == id)) throw new Exception("Проверьте id");
+                string code = txtCode.Text;
+                if (code == null) throw new Exception("Введите код");
+                if (!db.Employees.Any(x => x.Code == code)) throw new Exception("Проверьте код");
 
-                Employee employee = db.Employees.Include(x => x.EmployeeType).First(x => x.Id == id);
+                Employee employee = db.Employees.Include(x => x.EmployeeType).First(x => x.Code == code);
                 switch (employee.EmployeeType.Id)
                 {
                     case 1:
@@ -98,7 +98,7 @@ namespace WpfApp1
                 }
 
                 // Закрыть текущее окно авторизации
-                this.Close();
+                //this.Close();
             }
             catch (Exception ex)
             {

@@ -22,7 +22,8 @@ namespace WpfApp1.SystemAdmin
             ObservableCollection<DeleteItem> Deletes = new ObservableCollection<DeleteItem>();
             foreach (Employee employee in db.Employees.Include(x => x.EmployeeType))
             {
-                Deletes.Add(new DeleteItem { Id = employee.Id, Info = $"{employee.Name} {employee.EmployeeType.Name}" });
+                bool isDeletable = employee.Id != "100000"; // Системный администратор не может быть удален
+                Deletes.Add(new DeleteItem { Id = employee.Id, Info = $"{employee.Name} {employee.EmployeeType.Name}", IsDeletable = isDeletable });
             }
             EmplDeletes = Deletes;
         }

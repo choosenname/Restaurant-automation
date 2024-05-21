@@ -29,6 +29,7 @@ namespace WpfApp1.Waiter
         public AddOrder(Order? order = null)
         {
             InitializeComponent();
+            Title = "Создание заказа";
             Window window = new Window { Height = 200, Width = 200, WindowStartupLocation = WindowStartupLocation.CenterScreen };
             TextBox textBox1 = new TextBox();
             TextBox textBox2 = new TextBox();
@@ -53,7 +54,8 @@ namespace WpfApp1.Waiter
 
             submitButton.Click += (sender, e) =>
             {
-                if(string.IsNullOrEmpty(textBox1.Text))
+
+                if (string.IsNullOrEmpty(textBox1.Text))
                 {
                     MessageBox.Show("Пожалуйста, введите номер стола.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -97,7 +99,6 @@ namespace WpfApp1.Waiter
             UIAllBoard();
 
         }
-
 
         private void GetCategory(DishCategory category)
         {
@@ -233,8 +234,11 @@ namespace WpfApp1.Waiter
 
             minusButton.Click += (sender, e) =>
             {
-                model.Count--;
-                quantityTextBox.Text = model.Count.ToString();
+                if (model.Count > 1) // Проверяем, что количество больше 1
+                {
+                    model.Count--;
+                    quantityTextBox.Text = model.Count.ToString();
+                }
             };
 
 

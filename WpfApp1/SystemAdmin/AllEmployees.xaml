@@ -9,7 +9,7 @@
             <Label Content="Сотрудники" FontSize="26" FontWeight="Bold" Margin="10"/>
             <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" Height="auto" CanUserAddRows="False" IsReadOnly="True" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="{DynamicResource MaterialDesignPaper}" materialDesign:DataGridAssist.CellPadding="13">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="Auto" />
+                    <DataGridTextColumn Header="Код" Binding="{Binding Code}" Width="*" />
                     <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="*" />
                     <DataGridTextColumn Header="Роль" Binding="{Binding EmployeeType.Name}" Width="*" />
                 </DataGrid.Columns>

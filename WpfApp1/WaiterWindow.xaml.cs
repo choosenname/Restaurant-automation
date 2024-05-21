@@ -71,7 +71,7 @@ namespace WpfApp1
             };
             Label priceLabel = new Label
             {
-                Content = $"Цена: {order.Result} руб.",
+                Content = $"Цена: {order.Result} бел.руб.",
                 Width = 100,
                 Height = double.NaN
             };
@@ -125,6 +125,8 @@ namespace WpfApp1
 
             orderBoard.Children.Add(customBorder);
         }
+
+
 
 
         private void Login_Click(object sender, RoutedEventArgs e)

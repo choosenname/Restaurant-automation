@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
         mc:Ignorable="d"
-        Title="AddCategory" Height="200" Width="200"
+        Title="Добавление категории" Height="200" Width="200"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <StackPanel>

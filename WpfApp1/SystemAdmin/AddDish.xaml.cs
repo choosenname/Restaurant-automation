@@ -33,27 +33,50 @@ namespace WpfApp1.SystemAdmin
         {
             try
             {
-                string name = txtName.Text, priceTxt = txtPrice.Text;
+                string name = txtName.Text;
+                string priceTxt = txtPrice.Text;
                 DishCategory category = (DishCategory)typeComboBox.SelectedItem;
 
-                if (name == null || priceTxt == null || category == null) throw new Exception("Заполните все данные");
-                if (!Decimal.TryParse(priceTxt, out decimal price)) throw new Exception("Введите корректную цену");
+                // Проверка на ввод имени блюда
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    MessageBox.Show("Введите название блюда.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
+                // Проверка на ввод цены
+                if (string.IsNullOrEmpty(priceTxt))
+                {
+                    MessageBox.Show("Введите цену.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Проверка на валидность и отрицательность цены
+                if (!decimal.TryParse(priceTxt, out decimal price) || price < 0)
+                {
+                    MessageBox.Show("Введите корректную положительную цену.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Создание нового блюда и добавление его в базу данных
                 Dish dish = new Dish { Name = name, Price = price, Category = category };
                 db.Dishes.Add(dish);
                 db.SaveChanges();
+
                 MessageBox.Show("Блюдо добавлено");
+
+                // Очистка полей после успешного добавления
                 txtName.Text = "";
                 txtPrice.Text = "";
                 typeComboBox.ItemsSource = db.DishCategories.ToList();
                 typeComboBox.SelectedIndex = 0;
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

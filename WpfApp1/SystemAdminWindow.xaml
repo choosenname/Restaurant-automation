@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="SystemAdminWindow" Height="250" Width="400"
+        Title="Системный администратор" Height="250" Width="400"
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>

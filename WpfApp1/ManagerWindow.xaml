@@ -1,7 +1,7 @@
 ﻿<Window x:Class="WpfApp1.ManagerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Manager" Height="450" Width="800">
+        Title="Менеджер" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,11 +15,11 @@
         <DatePicker Grid.Row="1" x:Name="EndDatePicker" Margin="10" SelectedDate="{Binding EndDate}" DisplayDateEnd="{Binding MaximumDate}" DisplayDateStart="{Binding StartDate}" />
 
         <ComboBox Grid.Row="2" x:Name="ReportTypeComboBox" Margin="10">
-            <ComboBoxItem Content="Sales Report"/>
-            <ComboBoxItem Content="Cash Report"/>
-            <ComboBoxItem Content="Cancellation Report"/>
+            <ComboBoxItem Content="Отчет продаж"/>
+            <ComboBoxItem Content="Кассовый протокол"/>
+            <ComboBoxItem Content="Отчет отмен"/>
         </ComboBox>
 
-        <Button Grid.Row="3" Content="Generate Report" Margin="10" Click="GenerateReport_Click" Width="auto" Height="30" Padding="20 0" VerticalAlignment="Top" Background="#2C3E50" Foreground="White"/>
+        <Button Grid.Row="3" Content="Сгенерировать отчет" Margin="10" Click="GenerateReport_Click" Width="auto" Height="30" Padding="20 0" VerticalAlignment="Top" Background="#2C3E50" Foreground="White"/>
     </Grid>
 </Window>
