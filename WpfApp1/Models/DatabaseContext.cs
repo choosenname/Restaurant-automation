@@ -49,7 +49,7 @@ namespace WpfApp1.Models
                 .HasForeignKey(r => r.TypeId);
 
             modelBuilder.Entity<Employee>().HasData(
-                new Employee { Id = "100000", Code= "100000", Name = "Систесный администратор", TypeId = 1, WorkSchedule = "23.06.2004" });
+                new Employee { Id = "100000", Code= "100000", Name = "Систесный администратор", TypeId = 1, StartWork = "09:00", EndWork = "17:00", WorkDays = [] });
 
             modelBuilder.Entity<Kassa>().HasData(
                 new Kassa { Id = 1, Nalichny = 0, Card = 0, Return = 0});

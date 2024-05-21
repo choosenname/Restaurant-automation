@@ -1,28 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using WpfApp1.Models;
 using WpfApp1.Models.Database;
 
 namespace WpfApp1.SystemAdmin
 {
-    /// <summary>
-    /// Логика взаимодействия для AddEmployee.xaml
-    /// </summary>
     public partial class AddEmployee : Window
     {
         DatabaseContext db = new DatabaseContext();
-        
+
         private int GetUniqueId()
         {
             int id;
@@ -48,9 +35,31 @@ namespace WpfApp1.SystemAdmin
 
             InitializeComponent();
             employeeId.Text = GetUniqueId().ToString();
-            employeeCode.Text= GetUniqueCode().ToString();
+            employeeCode.Text = GetUniqueCode().ToString();
             typeComboBox.ItemsSource = db.EmployeeTypes.ToList();
             typeComboBox.SelectedIndex = 0;
+        }
+
+        private DayOfWeek[] GetSelectedDaysOfWeek()
+        {
+            List<DayOfWeek> selectedDays = new List<DayOfWeek>();
+
+            if (chkMonday.IsChecked == true)
+                selectedDays.Add(DayOfWeek.Monday);
+            if (chkTuesday.IsChecked == true)
+                selectedDays.Add(DayOfWeek.Tuesday);
+            if (chkWednesday.IsChecked == true)
+                selectedDays.Add(DayOfWeek.Wednesday);
+            if (chkThursday.IsChecked == true)
+                selectedDays.Add(DayOfWeek.Thursday);
+            if (chkFriday.IsChecked == true)
+                selectedDays.Add(DayOfWeek.Friday);
+            if (chkSaturday.IsChecked == true)
+                selectedDays.Add(DayOfWeek.Saturday);
+            if (chkSunday.IsChecked == true)
+                selectedDays.Add(DayOfWeek.Sunday);
+
+            return selectedDays.ToArray();
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
@@ -69,7 +78,7 @@ namespace WpfApp1.SystemAdmin
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(txtWorkSchedule.Text))
+                if (string.IsNullOrWhiteSpace(timePickerStartWork.Text) || string.IsNullOrWhiteSpace(timePickerEndWork.Text))
                 {
                     MessageBox.Show("Пожалуйста, введите расписание работы.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -79,7 +88,8 @@ namespace WpfApp1.SystemAdmin
                 string code = employeeCode.Text;
                 string name = txtName.Text;
                 EmployeeType type = (EmployeeType)typeComboBox.SelectedItem;
-                string workSchedule = txtWorkSchedule.Text;
+                var startWork = timePickerStartWork.Text;
+                var endWork = timePickerEndWork.Text;
 
                 Employee employee = new Employee
                 {
@@ -87,10 +97,14 @@ namespace WpfApp1.SystemAdmin
                     Name = name,
                     EmployeeType = type,
                     TypeId = type.Id,
-                    WorkSchedule = workSchedule,
-                    Code = code
+                    StartWork = startWork,
+                    EndWork = endWork,
+                    Code = code,
+                    WorkDays = GetSelectedDaysOfWeek(),
                 };
 
+                Employee employee = new Employee { Id = id, Name = name, EmployeeType = type
+                    , TypeId = type.Id, WorkSchedule = workSchedule};
                 db.Employees.Add(employee);
                 db.SaveChanges();
 
@@ -98,16 +112,25 @@ namespace WpfApp1.SystemAdmin
 
                 // Очистка полей ввода после добавления сотрудника
                 txtName.Text = "";
-                txtWorkSchedule.Text = "";
+                timePickerStartWork.Text = "";
+                timePickerEndWork.Text = "";
                 typeComboBox.SelectedIndex = 0;
                 employeeId.Text = GetUniqueId().ToString();
                 employeeCode.Text = GetUniqueCode().ToString();
+
+                // Сбросить CheckBox-ы
+                chkMonday.IsChecked = false;
+                chkTuesday.IsChecked = false;
+                chkWednesday.IsChecked = false;
+                chkThursday.IsChecked = false;
+                chkFriday.IsChecked = false;
+                chkSaturday.IsChecked = false;
+                chkSunday.IsChecked = false;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
     }
 }

@@ -3,30 +3,42 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
+        xmlns:local="clr-namespace:WpfApp1.SystemAdmin" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Добавление работника" Height="305" Width="300"
+        Title="Добавление работника" Height="400" Width="300"
         WindowStartupLocation="CenterScreen">
     <Grid>
-        <StackPanel  Margin="20">
-            <TextBlock x:Name="employeeId" Text="" FontWeight="Bold" Margin="0 5" Visibility="Hidden" />
-
+        <StackPanel Margin="20">
+            <TextBlock x:Name="employeeId" Text="" FontWeight="Bold" Margin="0 5" Visibility="Hidden"/>
 
             <TextBlock Text="Код:"/>
             <TextBlock x:Name="employeeCode" Text="" FontWeight="Bold" Margin="0 5"/>
 
-
             <TextBlock Text="Имя:"/>
             <TextBox x:Name="txtName" Width="200" HorizontalAlignment="Left"/>
 
-            <TextBlock Text="Время работы:"/>
-            <TextBox x:Name="txtWorkSchedule" Width="200" HorizontalAlignment="Left"/>
+            <TextBlock Text="Начало работы:"/>
+            <xctk:TimePicker x:Name="timePickerStartWork" Width="200" HorizontalAlignment="Left"/>
+
+            <TextBlock Text="Конец работы:"/>
+            <xctk:TimePicker x:Name="timePickerEndWork" Width="200" HorizontalAlignment="Left"/>
+
+            <TextBlock Text="Дни недели:"/>
+            <StackPanel Orientation="Vertical">
+                <CheckBox x:Name="chkMonday" Content="Понедельник"/>
+                <CheckBox x:Name="chkTuesday" Content="Вторник"/>
+                <CheckBox x:Name="chkWednesday" Content="Среда"/>
+                <CheckBox x:Name="chkThursday" Content="Четверг"/>
+                <CheckBox x:Name="chkFriday" Content="Пятница"/>
+                <CheckBox x:Name="chkSaturday" Content="Суббота"/>
+                <CheckBox x:Name="chkSunday" Content="Воскресенье"/>
+            </StackPanel>
 
             <TextBlock Text="Тип пользователя:"/>
             <ComboBox x:Name="typeComboBox" Width="200" HorizontalAlignment="Left" Margin="0 5 0 0"/>
 
             <Button Content="Добавить" Width="100" Height="30" Margin="0,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Add_Click" Background="#2C3E50" Foreground="White"/>
-
         </StackPanel>
     </Grid>
 </Window>
