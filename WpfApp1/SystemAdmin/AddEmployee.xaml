@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfApp1.SystemAdmin" 
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Добавление работника" Height="400" Width="300"
+        Title="Добавление работника" Height="450" Width="300"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <StackPanel Margin="20">

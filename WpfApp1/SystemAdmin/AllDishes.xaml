@@ -3,47 +3,88 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="AllDishes" Height="450" Width="800"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <!-- Label Style -->
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <!-- TextBox Style -->
+        <Style TargetType="TextBox">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Text" Value=""/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="Blue"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- DataGrid Style -->
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="Height" Value="auto"/>
+            <Setter Property="RowHeight" Value="30"/>
+            <Setter Property="ColumnHeaderHeight" Value="40"/>
+            <Setter Property="AlternatingRowBackground" Value="#F5F5F5"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="VerticalGridLinesBrush" Value="LightGray"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="LightGray"/>
+        </Style>
+
+        <!-- DataGridTextColumn Style -->
+        <Style TargetType="DataGridTextColumn">
+            <Setter Property="HeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#E0E0E0"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <StackPanel VerticalAlignment="Top">
             <StackPanel Orientation="Horizontal">
-                <Label Content="Блюда" FontSize="26" FontWeight="Bold"/>
-                <TextBox x:Name="searchBox" Text="Поиск по названию блюда" Width="200" Height="30" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Gray" GotFocus="searchBox_GotFocus" LostFocus="searchBox_LostFocus">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Setter Property="Foreground" Value="Gray" />
-                            <Style.Triggers>
-                                <Trigger Property="IsFocused" Value="True">
-                                    <Setter Property="Foreground" Value="Black" />
-                                    <Setter Property="Text" Value="" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                <Label Content="Блюда"/>
+                <TextBox x:Name="searchBox" Text="Поиск по названию блюда" GotFocus="searchBox_GotFocus" LostFocus="searchBox_LostFocus"/>
             </StackPanel>
 
-            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" Height="auto" CanUserAddRows="false">
+            <DataGrid x:Name="dataGrid">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Название" IsReadOnly="False" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
 
                     <DataGridTemplateColumn Header="Цена" Width="auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Price, StringFormat={}{0} бел.руб}" />
+                                <TextBlock Text="{Binding Price, StringFormat={}{0} бел.руб}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="Категория" IsReadOnly="True" Binding="{Binding Category.Name}" Width="*" />
-                    <DataGridTextColumn Header="IdCategory" IsReadOnly="True" Binding="{Binding Category.Id}" Visibility="Hidden" />
+                    <DataGridTextColumn Header="Категория" Binding="{Binding Category.Name}" Width="*"/>
+                    <DataGridTextColumn Header="IdCategory" Binding="{Binding Category.Id}" Visibility="Hidden"/>
                 </DataGrid.Columns>
             </DataGrid>
-
         </StackPanel>
     </Grid>
 </Window>

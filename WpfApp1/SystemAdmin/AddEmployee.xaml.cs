@@ -103,9 +103,6 @@ namespace WpfApp1.SystemAdmin
                     WorkDays = GetSelectedDaysOfWeek(),
                 };
 
-                Employee employee = new Employee { Id = id, Name = name, EmployeeType = type
-                    , TypeId = type.Id, WorkSchedule = workSchedule};
-                db.Employees.Add(employee);
                 db.SaveChanges();
 
                 MessageBox.Show("Сотрудник успешно добавлен", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);

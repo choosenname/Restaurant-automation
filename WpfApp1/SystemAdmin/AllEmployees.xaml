@@ -4,31 +4,82 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="AllEmployees" Height="450" Width="800"
         WindowStartupLocation="CenterScreen">
-    <Grid>
-        <StackPanel VerticalAlignment="Top">
-            <Label Content="Сотрудники" FontSize="26" FontWeight="Bold" Margin="10"/>
-            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" Height="auto" CanUserAddRows="False" IsReadOnly="True" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="{DynamicResource MaterialDesignPaper}" materialDesign:DataGridAssist.CellPadding="13">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Код" Binding="{Binding Code}" Width="*" />
-                    <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="*" />
-                    <DataGridTextColumn Header="Роль" Binding="{Binding EmployeeType.Name}" Width="*" />
-                </DataGrid.Columns>
-                <DataGrid.RowStyle>
+    <Window.Resources>
+        <!-- Label Style -->
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+        </Style>
+
+        <!-- DataGrid Style -->
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="Height" Value="auto"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"/>
+            <Setter Property="materialDesign:DataGridAssist.CellPadding" Value="13"/>
+            <Setter Property="RowStyle">
+                <Setter.Value>
                     <Style TargetType="DataGridRow">
                         <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"/>
                         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
                         <Setter Property="FontWeight" Value="Normal"/>
                         <Setter Property="FontSize" Value="14"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MaterialDesignPaperLight}"/>
+                            </Trigger>
+                        </Style.Triggers>
                     </Style>
-                </DataGrid.RowStyle>
-                <DataGrid.ColumnHeaderStyle>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="Background" Value="{DynamicResource MaterialDesignPrimary}"/>
                         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignForeground}"/>
                         <Setter Property="FontWeight" Value="Bold"/>
                         <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="Padding" Value="10"/>
                     </Style>
-                </DataGrid.ColumnHeaderStyle>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DataGridTextColumn Header Style -->
+        <Style TargetType="DataGridTextColumn">
+            <Setter Property="HeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="{DynamicResource MaterialDesignPrimary}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignForeground}"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="Padding" Value="10"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <StackPanel VerticalAlignment="Top">
+            <Label Content="Сотрудники"/>
+            <DataGrid x:Name="dataGrid">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Код" Binding="{Binding Code}" Width="*" />
+                    <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="Роль" Binding="{Binding EmployeeType.Name}" Width="*" />
+                </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
     </Grid>
