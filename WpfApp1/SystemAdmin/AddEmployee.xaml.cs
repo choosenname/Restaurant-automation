@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using WpfApp1.Models;
@@ -32,7 +33,6 @@ namespace WpfApp1.SystemAdmin
 
         public AddEmployee()
         {
-
             InitializeComponent();
             employeeId.Text = GetUniqueId().ToString();
             employeeCode.Text = GetUniqueCode().ToString();
@@ -62,6 +62,11 @@ namespace WpfApp1.SystemAdmin
             return selectedDays.ToArray();
         }
 
+        private bool IsTimeValid(string time)
+        {
+            return TimeSpan.TryParse(time, out _);
+        }
+
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -84,6 +89,19 @@ namespace WpfApp1.SystemAdmin
                     return;
                 }
 
+                if (!IsTimeValid(timePickerStartWork.Text) || !IsTimeValid(timePickerEndWork.Text))
+                {
+                    MessageBox.Show("Пожалуйста, введите корректное время в формате HH:mm.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var selectedDays = GetSelectedDaysOfWeek();
+                if (selectedDays.Length == 0)
+                {
+                    MessageBox.Show("Пожалуйста, выберите хотя бы один рабочий день.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 string id = employeeId.Text;
                 string code = employeeCode.Text;
                 string name = txtName.Text;
@@ -100,9 +118,10 @@ namespace WpfApp1.SystemAdmin
                     StartWork = startWork,
                     EndWork = endWork,
                     Code = code,
-                    WorkDays = GetSelectedDaysOfWeek(),
+                    WorkDays = selectedDays,
                 };
 
+                db.Employees.Add(employee); // Don't forget to add the employee to the context
                 db.SaveChanges();
 
                 MessageBox.Show("Сотрудник успешно добавлен", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
