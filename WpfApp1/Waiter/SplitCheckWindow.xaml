@@ -1,7 +1,7 @@
 ﻿<Window x:Class="WpfApp1.Waiter.SplitCheckWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Разделить чек" Height="400" Width="300">
+        Title="Разделить чек" Height="500" Width="300">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel x:Name="stack" >
 

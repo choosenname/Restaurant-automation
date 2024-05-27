@@ -16,7 +16,7 @@ namespace WpfApp1.Waiter
         public SplitCheckWindow(Order order, List<DishInOrder> items)
         {
             InitializeComponent();
-            orderItems = items;
+            orderItems = new List<DishInOrder>(items); // Use a copy of the list to avoid side effects
 
             // Отобразить список блюд заказа
             foreach (var item in orderItems)
@@ -35,7 +35,7 @@ namespace WpfApp1.Waiter
                 // Создаем ListBox
                 ListBox listBox = new ListBox();
                 listBox.Width = 140;
-                listBox.Height = 20;
+                listBox.Height = 120; // Adjust height for visibility
                 listBox.Margin = new Thickness(0);
                 listBox.VerticalAlignment = VerticalAlignment.Stretch;
                 listBox.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -45,7 +45,7 @@ namespace WpfApp1.Waiter
                 Button button = new Button();
                 button.Content = "+";
                 button.HorizontalAlignment = HorizontalAlignment.Right;
-                button.Margin = new Thickness(0, 10, 10, 0);
+                button.Margin = new Thickness(10);
                 button.VerticalAlignment = VerticalAlignment.Top;
                 button.Width = 30;
                 button.Click += (sender, e) => Part_Click(sender, e, listBox);
@@ -72,21 +72,42 @@ namespace WpfApp1.Waiter
                 string selectedDishName = listBox.SelectedItem.ToString();
                 DishInOrder selectedDish = orderItems.FirstOrDefault(x => x.Dish.Name == selectedDishName);
 
-                // Получаем список блюд для текущего ListBox
-                List<DishInOrder> currentListBoxItems = ListBoxItemsMap[targetListBox];
-                targetListBox.Items.Add(selectedDishName);
+                if (selectedDish != null)
+                {
+                    // Получаем список блюд для текущего ListBox
+                    List<DishInOrder> currentListBoxItems = ListBoxItemsMap[targetListBox];
 
-                // Добавляем блюдо в список для текущего ListBox
-                currentListBoxItems.Add(selectedDish);
+                    // Добавляем блюдо в ListBox, если оно еще не добавлено
+                    if (!currentListBoxItems.Contains(selectedDish))
+                    {
+                        targetListBox.Items.Add(selectedDishName);
 
-                // Удаляем блюдо из общего списка, чтобы избежать дублирования
-                orderItems.Remove(selectedDish);
-                listBox.Items.Remove(selectedDishName);
+                        // Добавляем блюдо в список для текущего ListBox
+                        currentListBoxItems.Add(selectedDish);
+
+                        // Удаляем блюдо из общего списка, чтобы избежать дублирования
+                        orderItems.Remove(selectedDish);
+                        listBox.Items.Remove(selectedDishName);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Это блюдо уже добавлено в данный список.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Выбранное блюдо не найдено.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Пожалуйста, выберите блюдо из списка.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void Confirm_Click(object sender, RoutedEventArgs e)
         {
+            // Add any additional validation logic if necessary
             this.Close();
         }
     }
