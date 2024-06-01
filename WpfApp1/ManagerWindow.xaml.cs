@@ -32,7 +32,7 @@ public partial class ManagerWindow : Window
         // Проверка на выбор дат
         if (!StartDatePicker.SelectedDate.HasValue || !EndDatePicker.SelectedDate.HasValue)
         {
-            MessageBox.Show("Please select both start and end dates.");
+            MessageBox.Show("Пожалуйста, выберите начальную дату и конечную.");
             return;
         }
 
@@ -42,14 +42,14 @@ public partial class ManagerWindow : Window
         // Проверка на корректность диапазона дат
         if (endDate < startDate)
         {
-            MessageBox.Show("End date must be greater than or equal to start date.");
+            MessageBox.Show("Конечная дата не может быть меньше начальной");
             return;
         }
 
         // Проверка на выбор типа отчета
         if (ReportTypeComboBox.SelectedIndex == -1)
         {
-            MessageBox.Show("Please select a report type.");
+            MessageBox.Show("Пожалуйста, выберите тип отчета");
             return;
         }
 
@@ -76,7 +76,7 @@ public partial class ManagerWindow : Window
                 return;
         }
 
-        MessageBox.Show($"Report generated successfully at {outputPath}");
+        MessageBox.Show($"Отчет сохраен по пути: {outputPath}");
     }
 
 
@@ -106,10 +106,10 @@ public partial class ManagerWindow : Window
         var workbook = excelApp.Workbooks.Add();
         var worksheet = workbook.Worksheets[1];
 
-        worksheet.Cells[1, 1] = "Date";
-        worksheet.Cells[1, 2] = "Total Sales";
-        worksheet.Cells[1, 3] = "Total Items Sold";
-        worksheet.Cells[1, 4] = "Card Payments";
+        worksheet.Cells[1, 1] = "Дата";
+        worksheet.Cells[1, 2] = "Общий объем продаж";
+        worksheet.Cells[1, 3] = "Общее количество проданных товаров";
+        worksheet.Cells[1, 4] = "Платежи по картам";
 
         var row = 2;
         foreach (var sale in sales)
@@ -156,8 +156,8 @@ public partial class ManagerWindow : Window
         var workbook = excelApp.Workbooks.Add();
         var worksheet = workbook.Worksheets[1];
 
-        worksheet.Cells[1, 1] = "Date";
-        worksheet.Cells[1, 2] = "Cash Transactions";
+        worksheet.Cells[1, 1] = "Дата";
+        worksheet.Cells[1, 2] = "Операции с наличными деньгами";
 
         var row = 2;
         foreach (var transaction in cashTransactions)
@@ -195,9 +195,9 @@ public partial class ManagerWindow : Window
         var workbook = excelApp.Workbooks.Add();
         var worksheet = workbook.Worksheets[1];
 
-        worksheet.Cells[1, 1] = "Order ID";
-        worksheet.Cells[1, 2] = "Date";
-        worksheet.Cells[1, 3] = "Cancellation Reason";
+        worksheet.Cells[1, 1] = "Номер заказа";
+        worksheet.Cells[1, 2] = "Дата";
+        worksheet.Cells[1, 3] = "Причина отмены";
 
         var row = 2;
         foreach (var cancelledOrder in cancelledOrders)

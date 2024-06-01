@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1.Waiter"
         mc:Ignorable="d"
-        Title="EndOrder" Height="250" Width="300">
+        Title="Предчек" Height="250" Width="300">
     <Grid>
         <StackPanel>
             <TextBox IsReadOnly="True" x:Name="textBox" Margin="10" VerticalScrollBarVisibility="Auto"/>
