@@ -17,7 +17,8 @@
         <ScrollViewer Grid.Row="1">
             <StackPanel x:Name="EmployeesStackPanel" Margin="10"/>
         </ScrollViewer>
-        <Button Content="Экспорт в Word" Click="ExportToWord_Click" HorizontalAlignment="Right" Margin="10" Grid.Row="2"/>
+        <Button Content="Экспорт в Word" Click="ExportToWord_Click"  Margin="10" Grid.Row="2" Width="100" Height="20"/>
+        <Button Content="Экспорт в Excel" Click="ExportToExcel_Click"  Margin="10" Grid.Row="2" Width="100" Height="20"/>
 
     </Grid>
     
