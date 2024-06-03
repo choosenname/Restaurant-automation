@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Microsoft.Office.Interop.Excel;
+
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.IO;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WpfApp1.Models.Database;
@@ -105,16 +108,24 @@ namespace WpfApp1
             // Создаем новый документ Word
             Document document = winword.Documents.Add(ref missing, ref missing, ref missing, ref missing);
 
-            // Создаем строку заголовка
-            Paragraph headerParagraph = document.Content.Paragraphs.Add(ref missing);
-            headerParagraph.Range.Text = "График работы сотрудников";
-            headerParagraph.Range.Font.Size = 20;
-            headerParagraph.Range.Font.Bold = 1;
-            headerParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-            headerParagraph.Format.SpaceAfter = 10;
+            // Добавляем заголовок документа
+            Paragraph docTitleParagraph = document.Content.Paragraphs.Add(ref missing);
+            docTitleParagraph.Range.Text = "График работы";
+            docTitleParagraph.Range.Font.Size = 24;
+            docTitleParagraph.Range.Font.Bold = 1;
+            docTitleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+            docTitleParagraph.Format.SpaceAfter = 10;
+
+            // Добавляем текст перед таблицей
+            Paragraph beforeTableParagraph = document.Content.Paragraphs.Add(ref missing);
+            beforeTableParagraph.Range.Text = "График работы сотрудников";
+            beforeTableParagraph.Range.Font.Size = 20;
+            beforeTableParagraph.Range.Font.Bold = 1;
+            beforeTableParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+            beforeTableParagraph.Format.SpaceAfter = 10;
 
             // Создаем таблицу с двумя столбцами и заголовками
-            Table table = document.Tables.Add(headerParagraph.Range, Employees.Count + 1, 6, ref missing, ref missing);
+            Table table = document.Tables.Add(beforeTableParagraph.Range, Employees.Count + 1, 6, ref missing, ref missing);
             table.Borders.Enable = 1;
 
             // Добавляем заголовки столбцов
@@ -152,5 +163,76 @@ namespace WpfApp1
             document.SaveAs2(ref filePath);
         }
 
+        private void ExportToExcel_Click(object sender, RoutedEventArgs e)
+        {
+            // Создаем экземпляр приложения Excel
+            var excelApp = new Microsoft.Office.Interop.Excel.Application();
+            var workbook = excelApp.Workbooks.Add();
+            var worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Worksheets[1];
+
+            int currentRow = 1;
+
+            // Добавляем заголовок документа
+            worksheet.Cells[currentRow, 1] = "График работы сотрудников";
+            worksheet.Cells[currentRow, 1].Font.Size = 24;
+            worksheet.Cells[currentRow, 1].Font.Bold = true;
+            worksheet.Cells[currentRow, 1].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
+            worksheet.Range["A1", "F1"].Merge();
+            currentRow += 2;
+
+            // Добавляем заголовки столбцов
+            worksheet.Cells[currentRow, 1] = "Работник";
+            worksheet.Cells[currentRow, 2] = "Начало работы";
+            worksheet.Cells[currentRow, 3] = "Конец работы";
+            worksheet.Cells[currentRow, 4] = "Рабочие дни";
+            worksheet.Cells[currentRow, 5] = "Смен в этом месяце";
+            worksheet.Cells[currentRow, 6] = "Оставшихся смен в этом месяце";
+
+            // Делаем заголовки жирными
+            worksheet.Rows[currentRow].Font.Bold = true;
+            currentRow++;
+
+            DateTime currentDate = DateTime.Now;
+
+            // Заполняем таблицу данными
+            for (int i = 0; i < Employees.Count; i++)
+            {
+                string translatedWorkDays = string.Join(", ", Employees[i].WorkDays.Select(day => TranslateDayOfWeek(day.ToString())));
+
+                int workingDaysThisMonth = GetWorkingDaysCount(Employees[i], currentDate.AddDays(1 - currentDate.Day), currentDate.AddMonths(1).AddDays(-currentDate.Day));
+                int remainingWorkingDaysThisMonth = GetWorkingDaysCount(Employees[i], currentDate, currentDate.AddMonths(1).AddDays(-currentDate.Day));
+
+                worksheet.Cells[currentRow, 1] = Employees[i].Name;
+                worksheet.Cells[currentRow, 2] = Employees[i].StartWork;
+                worksheet.Cells[currentRow, 3] = Employees[i].EndWork;
+                worksheet.Cells[currentRow, 4] = translatedWorkDays;
+                worksheet.Cells[currentRow, 5] = workingDaysThisMonth.ToString();
+                worksheet.Cells[currentRow, 6] = remainingWorkingDaysThisMonth.ToString();
+                currentRow++;
+            }
+
+            // Автоматическое изменение размера столбцов по содержимому
+            worksheet.Columns.AutoFit();
+
+            // Автоматическое изменение высоты строк по содержимому
+            worksheet.Rows.AutoFit();
+
+            // Отображение приложения Excel
+            excelApp.Visible = true;
+
+            // Формируем имя файла с текущим временем
+            string currentTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string filename = $"EmployeeSchedule_{currentTime}.xlsx";
+
+            // Сохраняем документ
+            string filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), filename);
+            workbook.SaveAs(filePath);
+        }
+
+
     }
+
+
+
 }
+

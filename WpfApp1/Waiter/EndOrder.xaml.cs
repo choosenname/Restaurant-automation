@@ -220,11 +220,25 @@ namespace WpfApp1.Waiter
             string dateTimeNowString = DateTime.Now.ToString("yyyyMMddHHmmss");
             Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
             wordApp.Visible = true;
-            Document doc = wordApp.Documents.Add();
-            doc.Content.Text = textBox.Text;
+            Microsoft.Office.Interop.Word.Document doc = wordApp.Documents.Add();
+
+            // Add title "Предчек" to the document
+            Microsoft.Office.Interop.Word.Paragraph titleParagraph = doc.Content.Paragraphs.Add();
+            titleParagraph.Range.Text = "Предчек";
+            titleParagraph.Range.Font.Size = 16; // Adjust the font size as needed
+            titleParagraph.Range.Font.Bold = 1; // Make the title bold
+            titleParagraph.Format.SpaceAfter = 12; // Add some space after the title
+            titleParagraph.Range.InsertParagraphAfter();
+
+            // Add the content from the textBox after the title
+            Microsoft.Office.Interop.Word.Paragraph contentParagraph = doc.Content.Paragraphs.Add();
+            contentParagraph.Range.Text = textBox.Text;
 
             doc.SaveAs2($"order_{dateTimeNowString}.docx");
+            wordApp.Quit();
         }
+
+
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {

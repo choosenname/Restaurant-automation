@@ -19,6 +19,7 @@ using WpfApp1.SystemAdmin;
 using Microsoft.Office.Interop.Excel;
 using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.Office.Interop.Word;
 
 namespace WpfApp1
 {
@@ -58,18 +59,44 @@ namespace WpfApp1
             var wordApp = new Microsoft.Office.Interop.Word.Application();
             var document = wordApp.Documents.Add();
 
+            // Добавляем дату составления документа
+            var dateParagraph = document.Content.Paragraphs.Add();
+            dateParagraph.Range.Text = $"Дата составления: {DateTime.Now.ToString("dd.MM.yyyy")}";
+            dateParagraph.Range.Font.Size = 12;
+            dateParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+            dateParagraph.Range.InsertParagraphAfter();
+
+            // Добавляем заголовок документа
+            var docTitleParagraph = document.Content.Paragraphs.Add();
+            docTitleParagraph.Range.Text = "Меню ресторана";
+            docTitleParagraph.Range.Font.Size = 24;
+            docTitleParagraph.Range.Font.Bold = 1;
+            docTitleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+            docTitleParagraph.Range.InsertParagraphAfter();
+
+            decimal totalMenuCost = 0;
+            int totalDishesCount = 0;
+            int totalCategoriesCount = categoriesWithDishes.Count;
+
             foreach (var category in categoriesWithDishes)
             {
-                // Добавляем заголовок категории
-                var paragraph = document.Content.Paragraphs.Add();
-                paragraph.Range.Text = category.Name;
-                paragraph.Range.Font.Bold = 1; // Делаем заголовок категории жирным
-                paragraph.Range.InsertParagraphAfter();
+                int categoryDishesCount = category.Dishes.Count;
+                string categoryDishesText = GetDishCountText(categoryDishesCount);
 
-                if (category.Dishes.Any())
+                // Добавляем заголовок категории
+                var categoryParagraph = document.Content.Paragraphs.Add();
+                categoryParagraph.Range.Text = $"{category.Name} ({categoryDishesText})";
+                categoryParagraph.Range.Font.Size = 18;
+                categoryParagraph.Range.Font.Bold = 1;
+                categoryParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                categoryParagraph.Range.InsertParagraphAfter();
+
+                decimal categoryCost = 0;
+
+                if (categoryDishesCount > 0)
                 {
                     // Добавляем таблицу для блюд этой категории
-                    var table = document.Tables.Add(paragraph.Range, category.Dishes.Count + 1, 2);
+                    var table = document.Tables.Add(categoryParagraph.Range, categoryDishesCount + 1, 2);
                     table.Borders.Enable = 1; // Включаем границы таблицы
                     table.Cell(1, 1).Range.Text = "Название блюда";
                     table.Cell(1, 2).Range.Text = "Цена";
@@ -81,33 +108,77 @@ namespace WpfApp1
                         table.Cell(row, 1).Range.Text = dish.Name;
                         table.Cell(row, 2).Range.Text = $"{dish.Price.ToString("N2")} бел.руб";
 
+                        categoryCost += dish.Price;
+                        totalMenuCost += dish.Price;
                         row++;
                     }
                 }
+
+                totalDishesCount += categoryDishesCount;
+
+                // Добавляем итоговую строку для категории
+                var categoryTotalParagraph = document.Content.Paragraphs.Add();
+                categoryTotalParagraph.Range.Text = $"Итог по категории '{category.Name}': {categoryCost.ToString("N2")} бел.руб";
+                categoryTotalParagraph.Range.Font.Bold = 1;
+                categoryTotalParagraph.Range.InsertParagraphAfter();
 
                 // Добавляем пустой абзац после таблицы (или после заголовка, если блюд нет)
                 document.Content.Paragraphs.Add().Range.InsertParagraphAfter();
             }
 
+            // Добавляем общий итог по всему меню
+            var totalSummaryParagraph = document.Content.Paragraphs.Add();
+            totalSummaryParagraph.Range.Text = $"Общее количество категорий: {totalCategoriesCount}\n" +
+                                                $"Общее количество блюд: {totalDishesCount}\n" +
+                                                $"Общая стоимость меню: {totalMenuCost.ToString("N2")} бел.руб";
+            totalSummaryParagraph.Range.Font.Size = 16;
+            totalSummaryParagraph.Range.Font.Bold = 1;
+            totalSummaryParagraph.Range.InsertParagraphAfter();
+
             wordApp.Visible = true; // Показываем документ пользователю
         }
+
 
         private void ExportMenuToExcel(List<DishCategory> categoriesWithDishes)
         {
             var excelApp = new Microsoft.Office.Interop.Excel.Application();
             var workbook = excelApp.Workbooks.Add();
-            var worksheet = (Worksheet)workbook.Worksheets[1];
+            var worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Worksheets[1];
 
             int currentRow = 1;
+            decimal totalMenuCost = 0;
+            int totalDishesCount = 0;
+            int totalCategoriesCount = categoriesWithDishes.Count;
+
+            // Добавляем дату составления документа
+            worksheet.Cells[currentRow, 1] = $"Дата составления: {DateTime.Now.ToString("dd.MM.yyyy")}";
+            worksheet.Cells[currentRow, 1].Font.Size = 12;
+            worksheet.Cells[currentRow, 1].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignRight;
+            worksheet.Range["A1", "B1"].Merge();
+            currentRow += 2;
+
+            // Добавляем заголовок документа
+            worksheet.Cells[currentRow, 1] = "Меню ресторана";
+            worksheet.Cells[currentRow, 1].Font.Size = 24;
+            worksheet.Cells[currentRow, 1].Font.Bold = true;
+            worksheet.Cells[currentRow, 1].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
+            worksheet.Range[$"A{currentRow}", $"B{currentRow}"].Merge();
+            currentRow += 2;
 
             foreach (var category in categoriesWithDishes)
             {
+                int categoryDishesCount = category.Dishes.Count;
+                string categoryDishesText = GetDishCountText(categoryDishesCount);
+
                 // Добавляем заголовок категории
-                worksheet.Cells[currentRow, 1] = category.Name;
+                worksheet.Cells[currentRow, 1] = $"{category.Name} ({categoryDishesText})";
+                worksheet.Cells[currentRow, 1].Font.Size = 18;
                 worksheet.Cells[currentRow, 1].Font.Bold = true;
                 currentRow++;
 
-                if (category.Dishes.Any())
+                decimal categoryCost = 0;
+
+                if (categoryDishesCount > 0)
                 {
                     // Добавляем заголовки столбцов
                     worksheet.Cells[currentRow, 1] = "Название блюда";
@@ -119,17 +190,66 @@ namespace WpfApp1
                     foreach (var dish in category.Dishes)
                     {
                         worksheet.Cells[currentRow, 1] = dish.Name;
-                        worksheet.Cells[currentRow, 2].Value = dish.Price.ToString("N2") + " бел.руб";
+                        worksheet.Cells[currentRow, 2].Value = $"{dish.Price.ToString("N2")} бел.руб";
+
+                        categoryCost += dish.Price;
+                        totalMenuCost += dish.Price;
                         currentRow++;
                     }
                 }
+
+                totalDishesCount += categoryDishesCount;
+
+                // Добавляем итоговую строку для категории
+                worksheet.Cells[currentRow, 1] = $"Итог по категории '{category.Name}':";
+                worksheet.Cells[currentRow, 2] = $"{categoryCost.ToString("N2")} бел.руб";
+                worksheet.Rows[currentRow].Font.Bold = true;
+                currentRow++;
 
                 // Добавляем пустую строку после категории
                 currentRow++;
             }
 
+            // Добавляем общий итог по всему меню
+            worksheet.Cells[currentRow, 1] = "Общее количество категорий:";
+            worksheet.Cells[currentRow, 2] = totalCategoriesCount;
+            worksheet.Rows[currentRow].Font.Bold = true;
+            currentRow++;
+
+            worksheet.Cells[currentRow, 1] = "Общее количество блюд:";
+            worksheet.Cells[currentRow, 2] = totalDishesCount;
+            worksheet.Rows[currentRow].Font.Bold = true;
+            currentRow++;
+
+            worksheet.Cells[currentRow, 1] = "Общая стоимость меню:";
+            worksheet.Cells[currentRow, 2] = $"{totalMenuCost.ToString("N2")} бел.руб";
+            worksheet.Rows[currentRow].Font.Bold = true;
+            currentRow++;
+
+            // Автоматическое изменение размера столбцов по содержимому
+            worksheet.Columns.AutoFit();
+
+            // Автоматическое изменение размера строк по содержимому
+            worksheet.Rows.AutoFit();
+
             excelApp.Visible = true;
         }
+
+
+        // Функция для получения текста с правильным склонением для числа блюд
+        private string GetDishCountText(int count)
+        {
+            if (count % 10 == 1 && count % 100 != 11)
+                return $"{count} блюдо";
+            else if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20))
+                return $"{count} блюда";
+            else
+                return $"{count} блюд";
+        }
+
+
+
+
 
 
         private async void LoadMenuDataAsync()

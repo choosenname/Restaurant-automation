@@ -22,6 +22,7 @@ using DocumentFormat.OpenXml.Office.CustomUI;
 using ControlzEx.Standard;
 using Microsoft.EntityFrameworkCore;
 using WpfApp1.SystemAdmin;
+using System.Text.RegularExpressions;
 
 
 namespace WpfApp1
@@ -195,21 +196,77 @@ namespace WpfApp1
 
 
         }
-        private void GenerateCancellationReport(string reason, string filePath)
+
+private void GenerateCancellationReport(string reason, string filePath)
+    {
+        using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document))
         {
-            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document))
+            MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+            mainPart.Document = new Document();
+            Body body = mainPart.Document.AppendChild(new Body());
+
+            // Add document title
+            DocumentFormat.OpenXml.Wordprocessing.Paragraph titleParagraph = body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph());
+            DocumentFormat.OpenXml.Wordprocessing.Run titleRun = titleParagraph.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Run());
+            titleRun.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Text("Отчет об отмене заказа"));
+            titleParagraph.ParagraphProperties = new ParagraphProperties
             {
-                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
-                mainPart.Document = new Document();
-                Body body = mainPart.Document.AppendChild(new Body());
+                Justification = new Justification { Val = JustificationValues.Center }
+            };
+            titleRun.RunProperties = new RunProperties
+            {
+                Bold = new DocumentFormat.OpenXml.Wordprocessing.Bold(),
+                FontSize = new FontSize { Val = "28" }
+            };
 
-                DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph = body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph());
-                DocumentFormat.OpenXml.Wordprocessing.Run run = paragraph.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Run());
-                run.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Text(seats.Content.ToString() ?? "" ));
-                run.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Text($"\nПричина отмены: {reason}"));
+            // Add a blank line
+            body.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text(" "))));
 
-                wordDocument.Save();
-            }
+            // Add table
+            DocumentFormat.OpenXml.Wordprocessing.Table table = new DocumentFormat.OpenXml.Wordprocessing.Table();
+
+            // Add table properties
+            TableProperties tblProperties = new TableProperties(
+                new TableBorders(
+                    new TopBorder { Val = BorderValues.Single },
+                    new BottomBorder { Val = BorderValues.Single },
+                    new LeftBorder { Val = BorderValues.Single },
+                    new RightBorder { Val = BorderValues.Single },
+                    new InsideHorizontalBorder { Val = BorderValues.Single },
+                    new InsideVerticalBorder { Val = BorderValues.Single }
+                )
+            );
+            table.AppendChild(tblProperties);
+
+            // Add table header row
+            DocumentFormat.OpenXml.Wordprocessing.TableRow headerRow = new DocumentFormat.OpenXml.Wordprocessing.TableRow();
+            headerRow.Append(
+                new DocumentFormat.OpenXml.Wordprocessing.TableCell(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Столик")))),
+                new DocumentFormat.OpenXml.Wordprocessing.TableCell(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Количество гостей")))),
+                new DocumentFormat.OpenXml.Wordprocessing.TableCell(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Причина отмены"))))
+            );
+            table.AppendChild(headerRow);
+
+            // Extract table number and guest count using regular expressions
+            string seatsContent = seats.Content.ToString() ?? "";
+            string tableNumber = Regex.Match(seatsContent, @"Столик: (\d+)").Groups[1].Value;
+            string guestCount = Regex.Match(seatsContent, @"Кол-во гостей: (\d+)").Groups[1].Value;
+
+            // Add table row with cancellation information
+            DocumentFormat.OpenXml.Wordprocessing.TableRow dataRow = new DocumentFormat.OpenXml.Wordprocessing.TableRow();
+            dataRow.Append(
+                new DocumentFormat.OpenXml.Wordprocessing.TableCell(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text(tableNumber)))),
+                new DocumentFormat.OpenXml.Wordprocessing.TableCell(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text(guestCount)))),
+                new DocumentFormat.OpenXml.Wordprocessing.TableCell(new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text(reason))))
+            );
+            table.AppendChild(dataRow);
+
+            // Append table to body
+            body.AppendChild(table);
+
+            wordDocument.Save();
         }
     }
+
+}
 }
