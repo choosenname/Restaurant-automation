@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="Системный администратор" Height="250" Width="400"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
 
     <Window.Resources>
         <Style x:Key="LogoutButtonStyle" TargetType="Button">

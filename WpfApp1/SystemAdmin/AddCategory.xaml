@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
         mc:Ignorable="d"
         Title="Добавление категории" Height="200" Width="200"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
     <Grid>
         <StackPanel>
             <Label Content="Название:" FontSize="26"></Label>

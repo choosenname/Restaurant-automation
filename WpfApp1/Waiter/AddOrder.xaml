@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:WpfApp1.Waiter"
         mc:Ignorable="d"
         Title="AddOrder" Height="450" Width="800"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
     <Grid>
         <StackPanel Orientation="Horizontal">
             <StackPanel>

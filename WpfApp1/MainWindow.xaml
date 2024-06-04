@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Вход" Height="300" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
-        PreviewMouseDown="Window_PreviewMouseDown">
+        PreviewMouseDown="Window_PreviewMouseDown"
+        WindowState="Maximized">
     <Grid Background="#F0F0F0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

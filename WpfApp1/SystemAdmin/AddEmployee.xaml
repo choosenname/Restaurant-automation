@@ -7,7 +7,8 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Добавление работника" Height="450" Width="300"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
     <Grid>
         <StackPanel Margin="20">
             <TextBlock x:Name="employeeId" Text="" FontWeight="Bold" Margin="0 5" Visibility="Hidden"/>

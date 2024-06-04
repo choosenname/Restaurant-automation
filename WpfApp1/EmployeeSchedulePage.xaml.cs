@@ -1,31 +1,17 @@
 ﻿using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using Microsoft.Office.Interop.Excel;
-
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.IO;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using WpfApp1.Models.Database;
 using Paragraph = Microsoft.Office.Interop.Word.Paragraph;
 using Table = Microsoft.Office.Interop.Word.Table;
+using Window = System.Windows.Window;
 
 namespace WpfApp1
 {
-    /// <summary>
-    /// Логика взаимодействия для EmployeeSchedulePage.xaml
-    /// </summary>
-    public partial class EmployeeSchedulePage : System.Windows.Window
+    public partial class EmployeeSchedulePage : Window
     {
         public List<Employee> Employees { get; set; }
 
@@ -38,7 +24,7 @@ namespace WpfApp1
 
         private string TranslateDayOfWeek(string englishDayOfWeek)
         {
-            Dictionary<string, string> translationDict = new Dictionary<string, string>
+            var translationDict = new Dictionary<string, string>
             {
                 {"Monday", "Понедельник"},
                 {"Tuesday", "Вторник"},
@@ -49,27 +35,19 @@ namespace WpfApp1
                 {"Sunday", "Воскресенье"}
             };
 
-            // Проверяем, есть ли в словаре английское название дня недели
-            if (translationDict.ContainsKey(englishDayOfWeek))
-            {
-                // Если есть, возвращаем русское название
-                return translationDict[englishDayOfWeek];
-            }
-            else
-            {
-                // Если нет, возвращаем исходное английское название
-                return englishDayOfWeek;
-            }
+            return translationDict.TryGetValue(englishDayOfWeek, out var translatedDay)
+                ? translatedDay
+                : englishDayOfWeek;
         }
 
-        private int GetWorkingDaysCount(Employee employees, DateTime startDate, DateTime endDate)
+        private int GetWorkingDaysCount(Employee employee, DateTime startDate, DateTime endDate)
         {
             int workingDaysCount = 0;
             DateTime currentDate = startDate;
 
             while (currentDate <= endDate)
             {
-                if (employees.WorkDays.Contains(currentDate.DayOfWeek))
+                if (employee.WorkDays.Contains(currentDate.DayOfWeek))
                 {
                     workingDaysCount++;
                 }
@@ -83,52 +61,42 @@ namespace WpfApp1
         {
             DateTime currentDate = DateTime.Now;
 
-            foreach (var employee in employees)
+            var employeeData = employees.Select(employee => new
             {
-                string translatedWorkDays = string.Join(", ", employee.WorkDays.Select(day => TranslateDayOfWeek(day.ToString())));
+                employee.Name,
+                employee.StartWork,
+                employee.EndWork,
+                WorkDaysFormatted = string.Join(", ", employee.WorkDays.Select(day => TranslateDayOfWeek(day.ToString()))),
+                WorkingDaysThisMonth = GetWorkingDaysCount(employee, currentDate.AddDays(1 - currentDate.Day), currentDate.AddMonths(1).AddDays(-currentDate.Day)),
+                RemainingWorkingDaysThisMonth = GetWorkingDaysCount(employee, currentDate, currentDate.AddMonths(1).AddDays(-currentDate.Day))
+            }).ToList();
 
-                int workingDaysThisMonth = GetWorkingDaysCount(employee, currentDate.AddDays(1 - currentDate.Day), currentDate.AddMonths(1).AddDays(-currentDate.Day));
-                int remainingWorkingDaysThisMonth = GetWorkingDaysCount(employee, currentDate, currentDate.AddMonths(1).AddDays(-currentDate.Day));
-
-                TextBlock textBlock = new TextBlock();
-                textBlock.Text = $"Работник: {employee.Name}, Начало работы: {employee.StartWork} конец работы: {employee.EndWork}" +
-                    $" рабочие дни: {translatedWorkDays}, смен в этом месяце: {workingDaysThisMonth}, " +
-                    $"оставшихся смен в этом месяце: {remainingWorkingDaysThisMonth}";
-                EmployeesStackPanel.Children.Add(textBlock);
-            }
+            EmployeesDataGrid.ItemsSource = employeeData;
         }
+
         private void ExportToWord_Click(object sender, RoutedEventArgs e)
         {
-            // Создаем экземпляр приложения Word
-            Microsoft.Office.Interop.Word.Application winword = new Microsoft.Office.Interop.Word.Application();
-            winword.ShowAnimation = false;
-            winword.Visible = true;
+            var winword = new Microsoft.Office.Interop.Word.Application { ShowAnimation = false, Visible = true };
             object missing = System.Reflection.Missing.Value;
-
-            // Создаем новый документ Word
             Document document = winword.Documents.Add(ref missing, ref missing, ref missing, ref missing);
 
-            // Добавляем заголовок документа
-            Paragraph docTitleParagraph = document.Content.Paragraphs.Add(ref missing);
+            var docTitleParagraph = document.Content.Paragraphs.Add(ref missing);
             docTitleParagraph.Range.Text = "График работы";
             docTitleParagraph.Range.Font.Size = 24;
             docTitleParagraph.Range.Font.Bold = 1;
             docTitleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
             docTitleParagraph.Format.SpaceAfter = 10;
 
-            // Добавляем текст перед таблицей
-            Paragraph beforeTableParagraph = document.Content.Paragraphs.Add(ref missing);
+            var beforeTableParagraph = document.Content.Paragraphs.Add(ref missing);
             beforeTableParagraph.Range.Text = "График работы сотрудников";
             beforeTableParagraph.Range.Font.Size = 20;
             beforeTableParagraph.Range.Font.Bold = 1;
             beforeTableParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
             beforeTableParagraph.Format.SpaceAfter = 10;
 
-            // Создаем таблицу с двумя столбцами и заголовками
             Table table = document.Tables.Add(beforeTableParagraph.Range, Employees.Count + 1, 6, ref missing, ref missing);
             table.Borders.Enable = 1;
 
-            // Добавляем заголовки столбцов
             table.Cell(1, 1).Range.Text = "Работник";
             table.Cell(1, 2).Range.Text = "Начало работы";
             table.Cell(1, 3).Range.Text = "Конец работы";
@@ -138,7 +106,6 @@ namespace WpfApp1
 
             DateTime currentDate = DateTime.Now;
 
-            // Заполняем таблицу данными
             for (int i = 0; i < Employees.Count; i++)
             {
                 string translatedWorkDays = string.Join(", ", Employees[i].WorkDays.Select(day => TranslateDayOfWeek(day.ToString())));
@@ -154,25 +121,20 @@ namespace WpfApp1
                 table.Cell(i + 2, 6).Range.Text = remainingWorkingDaysThisMonth.ToString();
             }
 
-            // Формируем имя файла с текущим временем
             string currentTime = DateTime.Now.ToString("yyyyMMddHHmmss");
             object filename = $"EmployeeSchedule_{currentTime}.docx";
-
-            // Сохраняем документ
             object filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), (string)filename);
             document.SaveAs2(ref filePath);
         }
 
         private void ExportToExcel_Click(object sender, RoutedEventArgs e)
         {
-            // Создаем экземпляр приложения Excel
             var excelApp = new Microsoft.Office.Interop.Excel.Application();
             var workbook = excelApp.Workbooks.Add();
             var worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Worksheets[1];
 
             int currentRow = 1;
 
-            // Добавляем заголовок документа
             worksheet.Cells[currentRow, 1] = "График работы сотрудников";
             worksheet.Cells[currentRow, 1].Font.Size = 24;
             worksheet.Cells[currentRow, 1].Font.Bold = true;
@@ -180,7 +142,6 @@ namespace WpfApp1
             worksheet.Range["A1", "F1"].Merge();
             currentRow += 2;
 
-            // Добавляем заголовки столбцов
             worksheet.Cells[currentRow, 1] = "Работник";
             worksheet.Cells[currentRow, 2] = "Начало работы";
             worksheet.Cells[currentRow, 3] = "Конец работы";
@@ -188,13 +149,11 @@ namespace WpfApp1
             worksheet.Cells[currentRow, 5] = "Смен в этом месяце";
             worksheet.Cells[currentRow, 6] = "Оставшихся смен в этом месяце";
 
-            // Делаем заголовки жирными
             worksheet.Rows[currentRow].Font.Bold = true;
             currentRow++;
 
             DateTime currentDate = DateTime.Now;
 
-            // Заполняем таблицу данными
             for (int i = 0; i < Employees.Count; i++)
             {
                 string translatedWorkDays = string.Join(", ", Employees[i].WorkDays.Select(day => TranslateDayOfWeek(day.ToString())));
@@ -211,28 +170,15 @@ namespace WpfApp1
                 currentRow++;
             }
 
-            // Автоматическое изменение размера столбцов по содержимому
             worksheet.Columns.AutoFit();
-
-            // Автоматическое изменение высоты строк по содержимому
             worksheet.Rows.AutoFit();
 
-            // Отображение приложения Excel
             excelApp.Visible = true;
 
-            // Формируем имя файла с текущим временем
             string currentTime = DateTime.Now.ToString("yyyyMMddHHmmss");
             string filename = $"EmployeeSchedule_{currentTime}.xlsx";
-
-            // Сохраняем документ
             string filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), filename);
             workbook.SaveAs(filePath);
         }
-
-
     }
-
-
-
 }
-

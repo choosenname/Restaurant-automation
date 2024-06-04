@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
         mc:Ignorable="d"
         Title="Удаление блюда"  Height="300" Width="400"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
     <Grid>
         <StackPanel VerticalAlignment="Top">
             <ListBox ItemsSource="{Binding DishDeletes}" Height="200">

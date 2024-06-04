@@ -1,25 +1,35 @@
 ﻿<Window x:Class="WpfApp1.EmployeeSchedulePage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:WpfApp1"
-    Title="Расписание сотрудников">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WpfApp1"
+        Title="Расписание сотрудников"
+        WindowState="Maximized">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Заголовок -->
-        <TextBlock Text="График работы сотрудников" Margin="10" FontSize="20" FontWeight="Bold"/>
+        <TextBlock Text="График работы сотрудников" Margin="10" FontSize="20" FontWeight="Bold" Grid.Row="0" />
 
-        <!-- Панель для отображения списка сотрудников -->
-        <ScrollViewer Grid.Row="1">
-            <StackPanel x:Name="EmployeesStackPanel" Margin="10"/>
-        </ScrollViewer>
-        <Button Content="Экспорт в Word" Click="ExportToWord_Click"  Margin="10" Grid.Row="2" Width="100" Height="20"/>
-        <Button Content="Экспорт в Excel" Click="ExportToExcel_Click"  Margin="10" Grid.Row="2" Width="100" Height="20"/>
+        <!-- Таблица для отображения списка сотрудников -->
+        <DataGrid x:Name="EmployeesDataGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Работник" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Начало работы" Binding="{Binding StartWork}" Width="*"/>
+                <DataGridTextColumn Header="Конец работы" Binding="{Binding EndWork}" Width="*"/>
+                <DataGridTextColumn Header="Рабочие дни" Binding="{Binding WorkDaysFormatted}" Width="*"/>
+                <DataGridTextColumn Header="Смен в этом месяце" Binding="{Binding WorkingDaysThisMonth}" Width="*"/>
+                <DataGridTextColumn Header="Оставшихся смен в этом месяце" Binding="{Binding RemainingWorkingDaysThisMonth}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
+        <!-- Кнопки для экспорта -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
+            <Button Content="Экспорт в Excel" Click="ExportToExcel_Click" Margin="5" Width="auto" Height="30" Padding="20 0" VerticalAlignment="Top" Background="#2C3E50" Foreground="White"/>
+        </StackPanel>
     </Grid>
-    
 </Window>

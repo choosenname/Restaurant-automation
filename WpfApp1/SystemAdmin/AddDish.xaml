@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
         mc:Ignorable="d"
         Title="Добавление блюда"  Height="280" Width="300"
-WindowStartupLocation="CenterScreen">
+WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
     <Grid>
         <StackPanel  Margin="20">
             <TextBlock Text="Название блюда:"/>
