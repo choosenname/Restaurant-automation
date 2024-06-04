@@ -3,43 +3,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp1.SystemAdmin" 
+        xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Добавление работника" Height="450" Width="300"
+        Title="Добавление работника" Height="600" Width="800"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
-    <Grid>
-        <StackPanel Margin="20">
-            <TextBlock x:Name="employeeId" Text="" FontWeight="Bold" Margin="0 5" Visibility="Hidden"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <StackPanel Margin="40">
+                <TextBlock x:Name="employeeId" Text="" FontWeight="Bold" Margin="0 10" Visibility="Hidden"/>
 
-            <TextBlock Text="Код:"/>
-            <TextBlock x:Name="employeeCode" Text="" FontWeight="Bold" Margin="0 5"/>
+                <TextBlock Text="Код:" FontSize="26" Margin="0 10"/>
+                <TextBlock x:Name="employeeCode" Text="" FontWeight="Bold" FontSize="26" Margin="0 10"/>
 
-            <TextBlock Text="Имя:"/>
-            <TextBox x:Name="txtName" Width="200" HorizontalAlignment="Left"/>
+                <TextBlock Text="Имя:" FontSize="26" Margin="0 10"/>
+                <TextBox x:Name="txtName" Width="400" FontSize="20" Margin="0 10" HorizontalAlignment="Left"/>
 
-            <TextBlock Text="Начало работы:"/>
-            <xctk:TimePicker x:Name="timePickerStartWork" Width="200" HorizontalAlignment="Left"/>
+                <TextBlock Text="Начало работы:" FontSize="26" Margin="0 10"/>
+                <xctk:TimePicker x:Name="timePickerStartWork" Width="400" FontSize="20" Margin="0 10" HorizontalAlignment="Left"/>
 
-            <TextBlock Text="Конец работы:"/>
-            <xctk:TimePicker x:Name="timePickerEndWork" Width="200" HorizontalAlignment="Left"/>
+                <TextBlock Text="Конец работы:" FontSize="26" Margin="0 10"/>
+                <xctk:TimePicker x:Name="timePickerEndWork" Width="400" FontSize="20" Margin="0 10" HorizontalAlignment="Left"/>
 
-            <TextBlock Text="Дни недели:"/>
-            <StackPanel Orientation="Vertical">
-                <CheckBox x:Name="chkMonday" Content="Понедельник"/>
-                <CheckBox x:Name="chkTuesday" Content="Вторник"/>
-                <CheckBox x:Name="chkWednesday" Content="Среда"/>
-                <CheckBox x:Name="chkThursday" Content="Четверг"/>
-                <CheckBox x:Name="chkFriday" Content="Пятница"/>
-                <CheckBox x:Name="chkSaturday" Content="Суббота"/>
-                <CheckBox x:Name="chkSunday" Content="Воскресенье"/>
+                <TextBlock Text="Дни недели:" FontSize="26" Margin="0 10"/>
+                <StackPanel Orientation="Vertical" Margin="0 10">
+                    <CheckBox x:Name="chkMonday" Content="Понедельник" FontSize="20"/>
+                    <CheckBox x:Name="chkTuesday" Content="Вторник" FontSize="20"/>
+                    <CheckBox x:Name="chkWednesday" Content="Среда" FontSize="20"/>
+                    <CheckBox x:Name="chkThursday" Content="Четверг" FontSize="20"/>
+                    <CheckBox x:Name="chkFriday" Content="Пятница" FontSize="20"/>
+                    <CheckBox x:Name="chkSaturday" Content="Суббота" FontSize="20"/>
+                    <CheckBox x:Name="chkSunday" Content="Воскресенье" FontSize="20"/>
+                </StackPanel>
+
+                <TextBlock Text="Тип пользователя:" FontSize="26" Margin="0 10"/>
+                <ComboBox x:Name="typeComboBox" Width="400" FontSize="20" Margin="0 10" HorizontalAlignment="Left"/>
+
+                <Button Content="Добавить" Width="200" Height="60" FontSize="24" Margin="0 30 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Add_Click" Background="#2C3E50" Foreground="White"/>
             </StackPanel>
-
-            <TextBlock Text="Тип пользователя:"/>
-            <ComboBox x:Name="typeComboBox" Width="200" HorizontalAlignment="Left" Margin="0 5 0 0"/>
-
-            <Button Content="Добавить" Width="100" Height="30" Margin="0,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Add_Click" Background="#2C3E50" Foreground="White"/>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </ScrollViewer>
 </Window>

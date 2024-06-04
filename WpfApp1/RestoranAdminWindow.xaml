@@ -5,14 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="Администратор ресторана" Height="450" Width="440"
+        Title="Администратор ресторана" Height="900" Width="1200"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" HorizontalScrollBarVisibility="Auto" Width="440">
-            <WrapPanel Width="440" Height="auto" x:Name="orderBoard">
-
-
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <WrapPanel Width="1180" x:Name="orderBoard">
+                <!-- Добавьте сюда элементы, которые будут отображаться в orderBoard -->
+                <TextBlock Text="Пример элемента" FontSize="24" Margin="10" />
+                <!-- Добавьте дополнительные элементы с увеличенными размерами и отступами -->
             </WrapPanel>
         </ScrollViewer>
     </Grid>

@@ -13,10 +13,10 @@
         </Grid.RowDefinitions>
 
         <!-- Заголовок -->
-        <TextBlock Text="График работы сотрудников" Margin="10" FontSize="20" FontWeight="Bold" Grid.Row="0" />
+        <TextBlock Text="График работы сотрудников" Margin="20" FontSize="30" FontWeight="Bold" Grid.Row="0" HorizontalAlignment="Center"/>
 
         <!-- Таблица для отображения списка сотрудников -->
-        <DataGrid x:Name="EmployeesDataGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
+        <DataGrid x:Name="EmployeesDataGrid" Grid.Row="1" Margin="20" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" FontSize="16">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Работник" Binding="{Binding Name}" Width="*"/>
                 <DataGridTextColumn Header="Начало работы" Binding="{Binding StartWork}" Width="*"/>
@@ -28,8 +28,8 @@
         </DataGrid>
 
         <!-- Кнопки для экспорта -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
-            <Button Content="Экспорт в Excel" Click="ExportToExcel_Click" Margin="5" Width="auto" Height="30" Padding="20 0" VerticalAlignment="Top" Background="#2C3E50" Foreground="White"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20">
+            <Button Content="Экспорт в Excel" Click="ExportToExcel_Click" Margin="10" Width="150" Height="50" Padding="20 0" VerticalAlignment="Top" Background="#2C3E50" Foreground="White" FontSize="16"/>
         </StackPanel>
     </Grid>
 </Window>

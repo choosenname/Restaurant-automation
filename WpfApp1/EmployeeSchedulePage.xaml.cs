@@ -26,13 +26,13 @@ namespace WpfApp1
         {
             var translationDict = new Dictionary<string, string>
             {
-                {"Monday", "Понедельник"},
-                {"Tuesday", "Вторник"},
-                {"Wednesday", "Среда"},
-                {"Thursday", "Четверг"},
-                {"Friday", "Пятница"},
-                {"Saturday", "Суббота"},
-                {"Sunday", "Воскресенье"}
+                { "Monday", "Понедельник" },
+                { "Tuesday", "Вторник" },
+                { "Wednesday", "Среда" },
+                { "Thursday", "Четверг" },
+                { "Friday", "Пятница" },
+                { "Saturday", "Суббота" },
+                { "Sunday", "Воскресенье" }
             };
 
             return translationDict.TryGetValue(englishDayOfWeek, out var translatedDay)
@@ -51,6 +51,7 @@ namespace WpfApp1
                 {
                     workingDaysCount++;
                 }
+
                 currentDate = currentDate.AddDays(1);
             }
 
@@ -66,65 +67,15 @@ namespace WpfApp1
                 employee.Name,
                 employee.StartWork,
                 employee.EndWork,
-                WorkDaysFormatted = string.Join(", ", employee.WorkDays.Select(day => TranslateDayOfWeek(day.ToString()))),
-                WorkingDaysThisMonth = GetWorkingDaysCount(employee, currentDate.AddDays(1 - currentDate.Day), currentDate.AddMonths(1).AddDays(-currentDate.Day)),
-                RemainingWorkingDaysThisMonth = GetWorkingDaysCount(employee, currentDate, currentDate.AddMonths(1).AddDays(-currentDate.Day))
+                WorkDaysFormatted =
+                    string.Join(", ", employee.WorkDays.Select(day => TranslateDayOfWeek(day.ToString()))),
+                WorkingDaysThisMonth = GetWorkingDaysCount(employee, currentDate.AddDays(1 - currentDate.Day),
+                    currentDate.AddMonths(1).AddDays(-currentDate.Day)),
+                RemainingWorkingDaysThisMonth = GetWorkingDaysCount(employee, currentDate,
+                    currentDate.AddMonths(1).AddDays(-currentDate.Day))
             }).ToList();
 
             EmployeesDataGrid.ItemsSource = employeeData;
-        }
-
-        private void ExportToWord_Click(object sender, RoutedEventArgs e)
-        {
-            var winword = new Microsoft.Office.Interop.Word.Application { ShowAnimation = false, Visible = true };
-            object missing = System.Reflection.Missing.Value;
-            Document document = winword.Documents.Add(ref missing, ref missing, ref missing, ref missing);
-
-            var docTitleParagraph = document.Content.Paragraphs.Add(ref missing);
-            docTitleParagraph.Range.Text = "График работы";
-            docTitleParagraph.Range.Font.Size = 24;
-            docTitleParagraph.Range.Font.Bold = 1;
-            docTitleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-            docTitleParagraph.Format.SpaceAfter = 10;
-
-            var beforeTableParagraph = document.Content.Paragraphs.Add(ref missing);
-            beforeTableParagraph.Range.Text = "График работы сотрудников";
-            beforeTableParagraph.Range.Font.Size = 20;
-            beforeTableParagraph.Range.Font.Bold = 1;
-            beforeTableParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-            beforeTableParagraph.Format.SpaceAfter = 10;
-
-            Table table = document.Tables.Add(beforeTableParagraph.Range, Employees.Count + 1, 6, ref missing, ref missing);
-            table.Borders.Enable = 1;
-
-            table.Cell(1, 1).Range.Text = "Работник";
-            table.Cell(1, 2).Range.Text = "Начало работы";
-            table.Cell(1, 3).Range.Text = "Конец работы";
-            table.Cell(1, 4).Range.Text = "Рабочие дни";
-            table.Cell(1, 5).Range.Text = "Смен в этом месяце";
-            table.Cell(1, 6).Range.Text = "Оставшихся смен в этом месяце";
-
-            DateTime currentDate = DateTime.Now;
-
-            for (int i = 0; i < Employees.Count; i++)
-            {
-                string translatedWorkDays = string.Join(", ", Employees[i].WorkDays.Select(day => TranslateDayOfWeek(day.ToString())));
-
-                int workingDaysThisMonth = GetWorkingDaysCount(Employees[i], currentDate.AddDays(1 - currentDate.Day), currentDate.AddMonths(1).AddDays(-currentDate.Day));
-                int remainingWorkingDaysThisMonth = GetWorkingDaysCount(Employees[i], currentDate, currentDate.AddMonths(1).AddDays(-currentDate.Day));
-
-                table.Cell(i + 2, 1).Range.Text = Employees[i].Name;
-                table.Cell(i + 2, 2).Range.Text = Employees[i].StartWork;
-                table.Cell(i + 2, 3).Range.Text = Employees[i].EndWork;
-                table.Cell(i + 2, 4).Range.Text = translatedWorkDays;
-                table.Cell(i + 2, 5).Range.Text = workingDaysThisMonth.ToString();
-                table.Cell(i + 2, 6).Range.Text = remainingWorkingDaysThisMonth.ToString();
-            }
-
-            string currentTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-            object filename = $"EmployeeSchedule_{currentTime}.docx";
-            object filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), (string)filename);
-            document.SaveAs2(ref filePath);
         }
 
         private void ExportToExcel_Click(object sender, RoutedEventArgs e)
@@ -142,6 +93,12 @@ namespace WpfApp1
             worksheet.Range["A1", "F1"].Merge();
             currentRow += 2;
 
+            worksheet.Cells[currentRow, 1] = $"Дата составления: {DateTime.Now.ToString("dd.MM.yyyy")}";
+            worksheet.Cells[currentRow, 1].Font.Size = 14;
+            worksheet.Cells[currentRow, 1].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignLeft;
+            worksheet.Range["A3", "F3"].Merge();
+            currentRow += 2;
+
             worksheet.Cells[currentRow, 1] = "Работник";
             worksheet.Cells[currentRow, 2] = "Начало работы";
             worksheet.Cells[currentRow, 3] = "Конец работы";
@@ -156,10 +113,13 @@ namespace WpfApp1
 
             for (int i = 0; i < Employees.Count; i++)
             {
-                string translatedWorkDays = string.Join(", ", Employees[i].WorkDays.Select(day => TranslateDayOfWeek(day.ToString())));
+                string translatedWorkDays = string.Join(", ",
+                    Employees[i].WorkDays.Select(day => TranslateDayOfWeek(day.ToString())));
 
-                int workingDaysThisMonth = GetWorkingDaysCount(Employees[i], currentDate.AddDays(1 - currentDate.Day), currentDate.AddMonths(1).AddDays(-currentDate.Day));
-                int remainingWorkingDaysThisMonth = GetWorkingDaysCount(Employees[i], currentDate, currentDate.AddMonths(1).AddDays(-currentDate.Day));
+                int workingDaysThisMonth = GetWorkingDaysCount(Employees[i], currentDate.AddDays(1 - currentDate.Day),
+                    currentDate.AddMonths(1).AddDays(-currentDate.Day));
+                int remainingWorkingDaysThisMonth = GetWorkingDaysCount(Employees[i], currentDate,
+                    currentDate.AddMonths(1).AddDays(-currentDate.Day));
 
                 worksheet.Cells[currentRow, 1] = Employees[i].Name;
                 worksheet.Cells[currentRow, 2] = Employees[i].StartWork;
@@ -177,7 +137,8 @@ namespace WpfApp1
 
             string currentTime = DateTime.Now.ToString("yyyyMMddHHmmss");
             string filename = $"EmployeeSchedule_{currentTime}.xlsx";
-            string filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), filename);
+            string filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                filename);
             workbook.SaveAs(filePath);
         }
     }

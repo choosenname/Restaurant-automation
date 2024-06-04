@@ -5,26 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
         mc:Ignorable="d"
-        Title="Добавление блюда"  Height="280" Width="300"
-WindowStartupLocation="CenterScreen"
+        Title="Добавление блюда" Height="500" Width="600"
+        WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
     <Grid>
-        <StackPanel  Margin="20">
-            <TextBlock Text="Название блюда:"/>
-            <TextBox x:Name="txtName" Margin="0 5"/>
+        <StackPanel Margin="40">
+            <TextBlock Text="Название блюда:" FontSize="26" Margin="0 10"/>
+            <TextBox x:Name="txtName" FontSize="20" Margin="0 10"/>
 
-            <TextBlock Text="Цена блюда"/>
-            <TextBox x:Name="txtPrice" Margin="0 5"/>
+            <TextBlock Text="Цена блюда:" FontSize="26" Margin="0 10"/>
+            <TextBox x:Name="txtPrice" FontSize="20" Margin="0 10"/>
 
-            <TextBlock Text="Категория блюда:"/>
-            <StackPanel Orientation="Horizontal">
-                <ComboBox x:Name="typeComboBox" Width="218" HorizontalAlignment="Left" Margin="0 0 0 0"/>
-                <Button Margin="5 0" Content="+" Width="20" Height="20" Background="Black" Foreground="White" FontWeight="Bold" Click="Button_Click"/>
+            <TextBlock Text="Категория блюда:" FontSize="26" Margin="0 10"/>
+            <StackPanel Orientation="Horizontal" Margin="0 10">
+                <ComboBox x:Name="typeComboBox" Width="400" FontSize="20" HorizontalAlignment="Left"/>
+                <Button Margin="10 0" Content="+" Width="40" Height="40" Background="Black" Foreground="White" FontWeight="Bold" FontSize="20" Click="Button_Click"/>
             </StackPanel>
 
-
-            <Button Content="Добавить" Width="100" Height="30" Margin="0,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Add_Click" Background="#2C3E50" Foreground="White"/>
-
+            <Button Content="Добавить" Width="200" Height="60" FontSize="24" Margin="0,30,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Add_Click" Background="#2C3E50" Foreground="White"/>
         </StackPanel>
     </Grid>
 </Window>

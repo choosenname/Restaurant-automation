@@ -1,7 +1,7 @@
 ﻿<Window x:Class="WpfApp1.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Вход" Height="300" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Title="Вход" Height="600" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
         PreviewMouseDown="Window_PreviewMouseDown"
         WindowState="Maximized">
     <Grid Background="#F0F0F0">
@@ -11,23 +11,20 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Вход" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20"/>
+        <TextBlock Text="Вход" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,40"/>
 
-        <StackPanel Grid.Row="1" Margin="20">
-            <!--<TextBox x:Name="txtId" Text="Введите ваш ID" Foreground="LightGray" Height="45" Margin="0,10"
+        <StackPanel Grid.Row="1" Margin="40">
+            <!--<TextBox x:Name="txtId" Text="Введите ваш ID" Foreground="LightGray" Height="60" Margin="0,20"
          BorderBrush="#CCCCCC" BorderThickness="1" Background="#FFFFFF"
-         FontSize="16" Padding="10" GotFocus="TxtId_GotFocus" LostFocus="TxtId_LostFocus"/>-->
+         FontSize="18" Padding="10" GotFocus="TxtId_GotFocus" LostFocus="TxtId_LostFocus"/>-->
 
-
-            <TextBox x:Name="txtCode" Text="Введите ваш код" Foreground="LightGray" Height="45" Margin="0,10"
+            <TextBox x:Name="txtCode" Text="Введите ваш код" Foreground="LightGray" Height="60" Margin="0,20"
          BorderBrush="#CCCCCC" BorderThickness="1" Background="#FFFFFF"
-         FontSize="16" Padding="10" GotFocus="TxtId_GotFocus" LostFocus="TxtId_LostFocus"/>
-
-
+         FontSize="18" Padding="10" GotFocus="TxtId_GotFocus" LostFocus="TxtId_LostFocus"/>
         </StackPanel>
 
-        <Button Content="Войти" Width="100" Height="40" Margin="0,20" HorizontalAlignment="Center" Grid.Row="2"
-                Background="#2C3E50" Foreground="White" FontSize="16" FontWeight="Bold"
+        <Button Content="Войти" Width="200" Height="60" Margin="0,40" HorizontalAlignment="Center" Grid.Row="2"
+                Background="#2C3E50" Foreground="White" FontSize="20" FontWeight="Bold"
                 BorderThickness="0" Click="Login_Click">
             <Button.Effect>
                 <DropShadowEffect ShadowDepth="0" Color="#000000" BlurRadius="10" Opacity="0.5"/>

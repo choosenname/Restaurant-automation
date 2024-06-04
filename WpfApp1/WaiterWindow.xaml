@@ -5,22 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="Оффициант" Height="450" Width="600"
+        Title="Официант" Height="800" Width="1200"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
     <Grid>
         <StackPanel Orientation="Horizontal">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" HorizontalScrollBarVisibility="Auto" Width="440">
-                <WrapPanel Width="440" Height="auto" x:Name="orderBoard">
-
-                    
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Width="800" Margin="20">
+                <WrapPanel Width="800" Height="auto" x:Name="orderBoard">
+                    <!-- Order items will be added here -->
                 </WrapPanel>
             </ScrollViewer>
 
-
-            <Button Content="Создать заказ" Width="auto" Padding="20 5" Height="30" Margin="20,5,0,0" VerticalAlignment="Top" Click="Login_Click" Background="#2C3E50" Foreground="White"/>
+            <Button Content="Создать заказ" Width="300" Padding="30 10" Height="60" Margin="20" VerticalAlignment="Top" Click="Login_Click" Background="#2C3E50" Foreground="White" FontSize="18"/>
         </StackPanel>
-        
-        
     </Grid>
 </Window>

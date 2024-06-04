@@ -5,15 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1.SystemAdmin"
         mc:Ignorable="d"
-        Title="Добавление категории" Height="200" Width="200"
+        Title="Добавление категории" Height="400" Width="400"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized">
     <Grid>
         <StackPanel>
-            <Label Content="Название:" FontSize="26"></Label>
-            <TextBox x:Name="txtName" FontSize="20" Margin="5 10"/>
-            <Button Content="Добавить" Width="auto" Padding="20 10" Height="auto" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Add_Click" Background="#2C3E50" Foreground="White"/>
-
+            <Label Content="Название:" FontSize="32" Margin="20 10"></Label>
+            <TextBox x:Name="txtName" FontSize="26" Margin="20"/>
+            <Button Content="Добавить" Width="auto" Padding="30 20" Height="auto" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Add_Click" Background="#2C3E50" Foreground="White"/>
         </StackPanel>
     </Grid>
 </Window>
